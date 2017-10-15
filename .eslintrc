@@ -3,7 +3,7 @@
         "node": true
     },
     "parserOptions": {
-        "ecmaVersion": 6
+        "ecmaVersion": 8
     },
     "extends": "eslint-config-topcoder/nodejs",
     "rules": {
