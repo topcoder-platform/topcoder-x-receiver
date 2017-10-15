@@ -3,16 +3,19 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "lint": "eslint . --ignore-pattern 'public/*' --ext .js || true"
   },
   "dependencies": {
     "body-parser": "~1.17.1",
+    "config": "^1.26.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "express": "~4.15.2",
-    "hbs": "~4.0.1",
+    "joi": "^11.0.2",
+    "kafka-node": "^2.2.3",
     "morgan": "~1.8.1",
-    "serve-favicon": "~2.4.2"
+    "winston": "^2.3.1"
   },
   "devDependencies": {
     "eslint-config-topcoder": "^2.0.0",
