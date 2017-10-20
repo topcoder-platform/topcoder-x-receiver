@@ -6,6 +6,9 @@
     "start": "node ./bin/www",
     "lint": "eslint . --ignore-pattern 'public/*' --ext .js || true"
   },
+  "engines": {
+    "node": ">8.6.0"
+  },
   "dependencies": {
     "body-parser": "~1.17.1",
     "config": "^1.26.2",
