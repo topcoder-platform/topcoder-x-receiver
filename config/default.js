@@ -18,6 +18,6 @@ module.exports = {
   GITHUB_SECRET_TOKEN: process.env.GITHUB_SECRET_TOKEN || '',
   GITLAB_SECRET_TOKEN: process.env.GITLAB_SECRET_TOKEN || '',
   WATCH_REPOS: [
-    'https://github.com/topcoderinc/cab'
+    'https://github.com/cwdcwd/challengeFetcher'
   ]
 };
