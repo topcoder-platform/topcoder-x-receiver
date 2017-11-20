@@ -3,9 +3,10 @@
  */
 /**
  * This module is a wrapper for kafka producer.
- *
+ * Changes in 1.1:
+ * - changes related to https://www.topcoder.com/challenges/30060466
  * @author TCSCODER
- * @version 1.0
+ * @version 1.1
  */
 'use strict';
 
@@ -16,7 +17,7 @@ const logger = require('./logger');
 
 class Kafka {
   constructor() {
-    this.client = new kafka.Client(config.ZOO_KEEPER);
+    this.client = new kafka.KafkaClient(config.KAFKA_OPTIONS);
     this.producer = new kafka.Producer(this.client);
     this.producer.on('ready', () => {
       logger.info('kafka producer is ready.');

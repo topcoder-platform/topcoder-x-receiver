@@ -4,9 +4,10 @@
 
 /**
  * This module contains the EventDetector for github.
- *
+ * Changes in 1.1:
+ * - changes related to https://www.topcoder.com/challenges/30060466
  * @author TCSCODER
- * @version 1.0
+ * @version 1.1
  */
 'use strict';
 
@@ -33,6 +34,7 @@ const parseIssue = (issue) => ({
 
 const parseRepository = (repository) => ({
   id: repository.id,
+  name: repository.name,
   full_name: repository.full_name
 });
 
@@ -88,6 +90,18 @@ IssueUpdatedEvent.parse = (data) => ({
 
 // end the IssueUpdatedEvent
 
+const parseComment = (data) => ({
+  issue: parseIssue(data.issue),
+  repository: parseRepository(data.repository),
+  comment: {
+    id: data.comment.id,
+    body: data.comment.body,
+    user: {
+      id: data.comment.user.id,
+      name: data.comment.user.login
+    }
+  }
+});
 // begin the CommentCreatedEvent
 const CommentCreatedEvent = {
   event: models.CommentCreatedEvent
@@ -100,20 +114,24 @@ CommentCreatedEvent.schema = Joi.object().keys({
   comment: Joi.object().required()
 });
 
-CommentCreatedEvent.parse = (data) => ({
-  issue: parseIssue(data.issue),
-  repository: parseRepository(data.repository),
-  comment: {
-    id: data.comment.id,
-    body: data.comment.body,
-    user: {
-      id: data.comment.user.id,
-      name: data.comment.user.login
-    }
-  }
-});
+CommentCreatedEvent.parse = parseComment;
 
 // end the CommentCreatedEvent
+
+// begin the CommentUpdatedEvent
+const CommentUpdatedEvent = {
+  event: models.CommentUpdatedEvent
+};
+
+CommentUpdatedEvent.schema = Joi.object().keys({
+  action: Joi.string().valid('edited').required(),
+  issue: Joi.object().required(),
+  repository: Joi.object().required(),
+  comment: Joi.object().required()
+});
+
+CommentUpdatedEvent.parse = parseComment;
+// end the CommentUpdatedEvent
 
 // begin the UserAssignedEvent
 const UserAssignedEvent = {
@@ -238,6 +256,7 @@ module.exports = new EventDetector('github', [
   IssueCreatedEvent,
   IssueUpdatedEvent,
   CommentCreatedEvent,
+  CommentUpdatedEvent,
   UserAssignedEvent,
   UserUnassignedEvent,
   LabelAssignedEvent,
