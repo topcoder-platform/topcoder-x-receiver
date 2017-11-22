@@ -33,11 +33,22 @@ The following config parameters are supported, they are defined in `config/defau
 | PORT                           | the port the application will listen on    |  3000                            |
 | LOG_LEVEL                      | the log level                              |  info                            |
 | TOPIC                          | the kafka subscribe topic name             |  events_topic                    |
-| ZOO_KEEPER                     | the ip:port to connect to ZOO_KEEPER       |  localhost:2181                  |
+|KAFKA_OPTIONS                   | the connection option for kafka            |  see below about KAFKA options                   |
 | GITHUB_SECRET_TOKEN            | the webhook security token for github      |                                  |
 | GITLAB_SECRET_TOKEN            | the webhook security token for gitlab      |                                  |
 | WATCH_REPOS                    | the repos we want to watch                 |                                  |
 
+KAFKA_OPTIONS should be object as described in https://github.com/SOHU-Co/kafka-node#kafkaclient
+For using with SSL, the options should be as
+```
+ {
+    kafkaHost: '<server>',
+    sslOptions: {
+      cert: '<certificate>', 
+      key:  '<key>'
+    }
+ }
+```
 
 To change the WATCH_REPOS, you'd better create a `config/local.js` file to override the WATCH_REPOS, see `config/sample-local.js` for example.
 
@@ -108,6 +119,7 @@ ngrok http 3000
 - create an issue in the repo, you can see the logs in `receiver` and `processor`, the `issue.created` event is generated.
 - update an issue in the repo, you can see the logs in `receiver` and `processor`, the `issue.updated` event is generated.
 - create a comment on an issue, you can see the logs in `receiver` and `processor`, the `comment.created` event is generated.
+- update a comment on an issue, you can see the logs in `receiver` and `processor`, the `comment.updated` event is generated.
 - assigned a user to an issue, you can see the logs in `receiver` and `processor`, the `issue.assigned` event is generated.
 - assigned a user to an issue, you can see the logs in `receiver` and `processor`, the `issue.unassigned` event is generated.
 - add a label to an issue, you can see the logs in `receiver` and `processor`, the `issue.labeled` event is generated.

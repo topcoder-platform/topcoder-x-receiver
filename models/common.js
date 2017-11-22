@@ -4,9 +4,10 @@
 
 /**
  * This module contains some common schemas.
- *
+ * Changes in 1.1:
+ * - changes related to https://www.topcoder.com/challenges/30060466
  * @author TCSCODER
- * @version 1.0
+ * @version 1.1
  */
 
 'use strict';
@@ -16,6 +17,7 @@ const Joi = require('joi');
 // the repository schema
 const repositorySchema = Joi.object().keys({
   id: Joi.number().required(),
+  name: Joi.string().required(),
   full_name: Joi.string().required()
 });
 
