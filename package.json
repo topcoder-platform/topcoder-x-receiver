@@ -7,7 +7,7 @@
     "lint": "eslint . --ignore-pattern 'public/*' --ext .js --fix || true"
   },
   "engines": {
-    "node": ">8.6.0"
+    "node": "~8.6.0"
   },
   "dependencies": {
     "body-parser": "~1.17.1",
