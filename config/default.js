@@ -17,7 +17,7 @@ module.exports = {
   TOPIC: process.env.TOPIC || 'events_topic',
   GITHUB_SECRET_TOKEN: process.env.GITHUB_SECRET_TOKEN || '',
   GITLAB_SECRET_TOKEN: process.env.GITLAB_SECRET_TOKEN || '',
-  WATCH_REPOS: [
+  WATCH_REPOS: process.env.WATCH_REPOS ? process.env.WATCH_REPOS.split(',') : [
     'https://github.com/cwdcwd/challengeFetcher'
   ],
   KAFKA_OPTIONS: {
