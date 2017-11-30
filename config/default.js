@@ -21,6 +21,6 @@ module.exports = {
     'https://github.com/cwdcwd/challengeFetcher'
   ],
   KAFKA_OPTIONS: {
-    kafkaHost: 'localhost:9092'
+    kafkaHost: process.env.KAFKA_HOST || 'localhost:9092'
   }
 };
