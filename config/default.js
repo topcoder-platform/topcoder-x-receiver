@@ -1,3 +1,6 @@
+'use strict';
+const fs = require('fs');
+
 /*
  * Copyright (c) 2017 TopCoder, Inc. All rights reserved.
  */
@@ -9,7 +12,6 @@
  * @author TCSCODER
  * @version 1.1
  */
-'use strict';
 
 module.exports = {
   PORT: process.env.PORT || 3000, // eslint-disable-line no-magic-numbers
@@ -21,6 +23,10 @@ module.exports = {
     'https://github.com/cwdcwd/challengeFetcher'
   ],
   KAFKA_OPTIONS: {
-    kafkaHost: process.env.KAFKA_HOST || 'localhost:9092'
+    kafkaHost: process.env.KAFKA_HOST || 'localhost:9092',
+    sslOptions: {
+     cert: process.env.KAFKA_CLIENT_CERT || fs.readFileSync('./kafka_client.cer'),
+     key: process.env.KAFKA_CLIENT_CERT_KEY || fs.readFileSync('./kafka_client.key')
+    }
   }
 };
