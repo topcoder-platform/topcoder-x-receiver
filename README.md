@@ -2,7 +2,7 @@
 
 - Nodejs 8 is required
 - [Apache Kafka](https://kafka.apache.org/)
-
+ - [Local installation guide](https://devops.profitbricks.com/tutorials/install-and-configure-apache-kafka-on-ubuntu-1604-1/)
 ## Install dependencies
 
 ```shell
