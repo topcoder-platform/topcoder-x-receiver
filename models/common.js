@@ -28,12 +28,10 @@ const issueSchema = Joi.object().keys({
   body: Joi.string().allow(''),
   labels: Joi.array().items(Joi.string()),
   assignees: Joi.array().items(Joi.object().keys({
-    id: Joi.number().required(),
-    name: Joi.string().required()
+    id: Joi.number().required()
   })),
   owner: Joi.object().keys({
-    id: Joi.number().required(),
-    name: Joi.string().required()
+    id: Joi.number().required()
   }).required()
 });
 
@@ -45,12 +43,10 @@ const pullRequestSchema = Joi.object().keys({
   body: Joi.string().allow(''),
   title: Joi.string().required(),
   user: Joi.object().keys({
-    id: Joi.number().required(),
-    name: Joi.string().required()
+    id: Joi.number().required()
   }),
   assignees: Joi.array().items({
-    id: Joi.number().required(),
-    name: Joi.string().required()
+    id: Joi.number().required()
   })
 });
 

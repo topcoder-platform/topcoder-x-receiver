@@ -16,10 +16,9 @@ const CommentCreatedEvent = require('./CommentCreatedEvent');
 const CommentUpdatedEvent = require('./CommentUpdatedEvent');
 const UserAssignedEvent = require('./UserAssignedEvent');
 const UserUnassignedEvent = require('./UserUnassignedEvent');
-const LabelAssignedEvent = require('./LabelAssignedEvent');
-const LabelUnassignedEvent = require('./LabelUnassignedEvent');
 const PullRequestCreatedEvent = require('./PullRequestCreatedEvent');
 const PullRequestClosedEvent = require('./PullRequestClosedEvent');
+const LabelUpdatedEvent = require('./LabelUpdatedEvent');
 
 module.exports = {
   IssueCreatedEvent,
@@ -28,8 +27,7 @@ module.exports = {
   CommentUpdatedEvent,
   UserAssignedEvent,
   UserUnassignedEvent,
-  LabelAssignedEvent,
-  LabelUnassignedEvent,
   PullRequestCreatedEvent,
-  PullRequestClosedEvent
+  PullRequestClosedEvent,
+  LabelUpdatedEvent
 };

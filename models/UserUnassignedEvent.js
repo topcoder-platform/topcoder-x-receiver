@@ -17,11 +17,7 @@ const UserUnassignedEvent = {
 
 UserUnassignedEvent.schema = Joi.object().keys({
   issue: issueSchema.required(),
-  repository: repositorySchema.required(),
-  assignee: Joi.object().keys({
-    id: Joi.number().required(),
-    name: Joi.string().required()
-  }).required()
+  repository: repositorySchema.required()
 });
 
 module.exports = UserUnassignedEvent;

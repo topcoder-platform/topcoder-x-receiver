@@ -21,8 +21,7 @@ CommentCreatedEvent.schema = Joi.object().keys({
     id: Joi.number().required(),
     body: Joi.string().allow(''),
     user: Joi.object().keys({
-      id: Joi.number().required(),
-      name: Joi.string().required()
+      id: Joi.number().required()
     }).required()
   }),
   repository: repositorySchema.required()

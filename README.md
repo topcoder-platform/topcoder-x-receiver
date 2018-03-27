@@ -75,7 +75,7 @@ set GITLAB_SECRET_TOKEN=...
 - go to the repository you want to watch
 - click: Settings -> Options(in the left panel) -> Webhooks
 - click: 'Add Webhook' button
-- fill the form: 
+- fill the form:
     - Payload URL: `https://<YOUR_HOST>/webhooks/github`,
     for example: `https://4bb6c860.ngrok.io/webhooks/github`
     - Content Type: application/json
@@ -111,7 +111,6 @@ use `ngrok` to make your local deploy accessible by internet:
 ngrok http 3000
 ```
 
-
 ## GitHub Verification
 
 - properly config and run the `receiver` app.
@@ -121,16 +120,22 @@ ngrok http 3000
 - create a comment on an issue, you can see the logs in `receiver` and `processor`, the `comment.created` event is generated.
 - update a comment on an issue, you can see the logs in `receiver` and `processor`, the `comment.updated` event is generated.
 - assigned a user to an issue, you can see the logs in `receiver` and `processor`, the `issue.assigned` event is generated.
-- assigned a user to an issue, you can see the logs in `receiver` and `processor`, the `issue.unassigned` event is generated.
-- add a label to an issue, you can see the logs in `receiver` and `processor`, the `issue.labeled` event is generated.
-- remove a label to an issue, you can see the logs in `receiver` and `processor`, the `issue.unlabeled` event is generated.
+- un-assigned a user to an issue, you can see the logs in `receiver` and `processor`, the `issue.unassigned` event is generated.
+- add/remove a label to an issue, you can see the logs in `receiver` and `processor`, the `issue.labelUpdated` event is generated.
 - create a pull request, you can see the logs in `receiver` and `processor`, the `pull_request.created` event is generated.
 - close a pull request without merge, you can see the logs in `receiver` and `processor`, the `pull_request.closed` event is generated and the `merged` property is `false`.
 - merge a pull request, you can see the logs in `receiver` and `processor`, the `pull_request.closed` event is generated and the `merged` property is `true`.
 
 ## Gitlab Verification
+
 - properly config and run the `receiver` app.
 - properly config and run the `processor` app.
 - create an issue in the repo, you can see the logs in `receiver` and `processor`, the `issue.created` event is generated.
-
-
+- update an issue in the repo, you can see the logs in `receiver` and `processor`, the `issue.updated` event is generated.
+- create a comment on an issue, you can see the logs in `receiver` and `processor`, the `comment.created` event is generated.
+- assigned a user to an issue, you can see the logs in `receiver` and `processor`, the `issue.assigned` event is generated.
+- un-assigned a user to an issue, you can see the logs in `receiver` and `processor`, the `issue.unassigned` event is generated.
+- add/remove a label to an issue, you can see the logs in `receiver` and `processor`, the `issue.labelUpdated` event is generated.
+- create a pull request, you can see the logs in `receiver` and `processor`, the `pull_request.created` event is generated.
+- close a pull request without merge, you can see the logs in `receiver` and `processor`, the `pull_request.closed` event is generated and the `merged` property is `false`.
+- merge a pull request, you can see the logs in `receiver` and `processor`, the `pull_request.closed` event is generated and the `merged` property is `true`.

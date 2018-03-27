@@ -23,12 +23,10 @@ const parseIssue = (issue) => ({
   title: issue.title,
   labels: _.map(issue.labels, 'name'),
   assignees: _.map(issue.assignees, (assignee) => ({
-    id: assignee.id,
-    name: assignee.login
+    id: assignee.id
   })),
   owner: {
-    id: issue.user.id,
-    name: issue.user.login
+    id: issue.user.id
   }
 });
 
@@ -45,12 +43,10 @@ const parsePullRequest = (data) => ({
   body: data.pull_request.body,
   title: data.pull_request.title,
   user: {
-    id: data.pull_request.user.id,
-    name: data.pull_request.user.login
+    id: data.pull_request.user.id
   },
   assignees: _.map(data.pull_request.assignees, (a) => ({
-    id: a.id,
-    name: a.login
+    id: a.id
   }))
 });
 
@@ -97,8 +93,7 @@ const parseComment = (data) => ({
     id: data.comment.id,
     body: data.comment.body,
     user: {
-      id: data.comment.user.id,
-      name: data.comment.user.login
+      id: data.comment.user.id
     }
   }
 });
@@ -149,8 +144,7 @@ UserAssignedEvent.parse = (data) => ({
   issue: parseIssue(data.issue),
   repository: parseRepository(data.repository),
   assignee: {
-    id: data.assignee.id,
-    name: data.assignee.login
+    id: data.assignee.id
   }
 });
 
@@ -170,51 +164,26 @@ UserUnassignedEvent.schema = Joi.object().keys({
 
 UserUnassignedEvent.parse = (data) => ({
   issue: parseIssue(data.issue),
-  repository: parseRepository(data.repository),
-  assignee: {
-    id: data.assignee.id,
-    name: data.assignee.login
-  }
+  repository: parseRepository(data.repository)
 });
 
 // end the UserUnassignedEvent
 
-// begin the LabelAssignedEvent
-const LabelAssignedEvent = {
-  event: models.LabelAssignedEvent
+// start of LabelUpdatedEvent
+const LabelUpdatedEvent = {
+  event: models.LabelUpdatedEvent,
+  schema: Joi.object().keys({
+    action: Joi.string().valid('unlabeled', 'labeled').required(),
+    issue: Joi.object().required(),
+    label: Joi.object().required(),
+    repository: Joi.object().required()
+  }),
+  parse: (data) => ({
+    issue: parseIssue(data.issue),
+    repository: parseRepository(data.repository),
+    labels: _.map(data.issue.labels, 'name')
+  })
 };
-
-LabelAssignedEvent.schema = Joi.object().keys({
-  action: Joi.string().valid('labeled').required(),
-  issue: Joi.object().required(),
-  label: Joi.object().required(),
-  repository: Joi.object().required()
-});
-
-LabelAssignedEvent.parse = (data) => ({
-  issue: parseIssue(data.issue),
-  repository: parseRepository(data.repository),
-  label: data.label.name
-});
-// end the LabelAssignedEvent
-
-// begin the LabelUnassignedEvent
-const LabelUnassignedEvent = {
-  event: models.LabelUnassignedEvent
-};
-
-LabelUnassignedEvent.schema = Joi.object().keys({
-  action: Joi.string().valid('unlabeled').required(),
-  issue: Joi.object().required(),
-  label: Joi.object().required(),
-  repository: Joi.object().required()
-});
-
-LabelUnassignedEvent.parse = (data) => ({
-  issue: parseIssue(data.issue),
-  repository: parseRepository(data.repository),
-  label: data.label.name
-});
 
 // end the LabelUnassignedEvent
 
@@ -259,8 +228,7 @@ module.exports = new EventDetector('github', [
   CommentUpdatedEvent,
   UserAssignedEvent,
   UserUnassignedEvent,
-  LabelAssignedEvent,
-  LabelUnassignedEvent,
+  LabelUpdatedEvent,
   PullRequestCreatedEvent,
   PullRequestClosedEvent
 ]);
