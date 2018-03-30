@@ -17,6 +17,11 @@ const _ = require('lodash');
 const models = require('../models');
 const EventDetector = require('./EventDetector');
 
+/**
+ * parse the issues from github webhook payload
+ * @param {object} issue the github issue payload
+ * @returns {object} the parsed issue detail
+ */
 const parseIssue = (issue) => ({
   number: issue.number,
   body: issue.body,
@@ -30,12 +35,22 @@ const parseIssue = (issue) => ({
   }
 });
 
+/**
+ * parse the repository from github webhook payload
+ * @param {object} repository the github webhook repository payload
+ * @returns {object} the parsed repository detail
+ */
 const parseRepository = (repository) => ({
   id: repository.id,
   name: repository.name,
   full_name: repository.full_name
 });
 
+/**
+ * parse the pull request from github webhok payload
+ * @param {object} data the github webhook payload
+ * @returns {object} the parsed pull request detail
+ */
 const parsePullRequest = (data) => ({
   number: data.number,
   id: data.pull_request.id,
@@ -50,42 +65,11 @@ const parsePullRequest = (data) => ({
   }))
 });
 
-// begin the IssueCreatedEvent
-const IssueCreatedEvent = {
-  event: models.IssueCreatedEvent
-};
-
-IssueCreatedEvent.schema = Joi.object().keys({
-  action: Joi.string().valid('opened').required(),
-  issue: Joi.object().required(),
-  repository: Joi.object().required()
-});
-
-IssueCreatedEvent.parse = (data) => ({
-  issue: parseIssue(data.issue),
-  repository: parseRepository(data.repository)
-});
-
-// end the IssueCreatedEvent
-
-// begin the IssueUpdatedEvent
-const IssueUpdatedEvent = {
-  event: models.IssueUpdatedEvent
-};
-
-IssueUpdatedEvent.schema = Joi.object().keys({
-  action: Joi.string().valid('edited').required(),
-  issue: Joi.object().required(),
-  repository: Joi.object().required()
-});
-
-IssueUpdatedEvent.parse = (data) => ({
-  issue: parseIssue(data.issue),
-  repository: parseRepository(data.repository)
-});
-
-// end the IssueUpdatedEvent
-
+/**
+ * parse the comment from github webhook payload
+ * @param {object} data the github webhook payload
+ * @returns {object} the parsed comment detail
+ */
 const parseComment = (data) => ({
   issue: parseIssue(data.issue),
   repository: parseRepository(data.repository),
@@ -97,79 +81,93 @@ const parseComment = (data) => ({
     }
   }
 });
-// begin the CommentCreatedEvent
+
+// definition of issue created event
+const IssueCreatedEvent = {
+  event: models.IssueCreatedEvent,
+  schema: Joi.object().keys({
+    action: Joi.string().valid('opened').required(),
+    issue: Joi.object().required(),
+    repository: Joi.object().required()
+  }),
+  parse: (data) => ({
+    issue: parseIssue(data.issue),
+    repository: parseRepository(data.repository)
+  })
+};
+
+// definition of issue updated event
+const IssueUpdatedEvent = {
+  event: models.IssueUpdatedEvent,
+  schema: Joi.object().keys({
+    action: Joi.string().valid('edited').required(),
+    issue: Joi.object().required(),
+    repository: Joi.object().required()
+  }),
+  parse: (data) => ({
+    issue: parseIssue(data.issue),
+    repository: parseRepository(data.repository)
+  })
+};
+
+// definition of issue comment updated event
 const CommentCreatedEvent = {
-  event: models.CommentCreatedEvent
+  event: models.CommentCreatedEvent,
+  schema: Joi.object().keys({
+    action: Joi.string().valid('created').required(),
+    issue: Joi.object().required(),
+    repository: Joi.object().required(),
+    comment: Joi.object().required()
+  }),
+  parse: parseComment
 };
 
-CommentCreatedEvent.schema = Joi.object().keys({
-  action: Joi.string().valid('created').required(),
-  issue: Joi.object().required(),
-  repository: Joi.object().required(),
-  comment: Joi.object().required()
-});
-
-CommentCreatedEvent.parse = parseComment;
-
-// end the CommentCreatedEvent
-
-// begin the CommentUpdatedEvent
+// definition of issue comment created event
 const CommentUpdatedEvent = {
-  event: models.CommentUpdatedEvent
+  event: models.CommentUpdatedEvent,
+  schema: Joi.object().keys({
+    action: Joi.string().valid('edited').required(),
+    issue: Joi.object().required(),
+    repository: Joi.object().required(),
+    comment: Joi.object().required()
+  }),
+  parse: parseComment
 };
 
-CommentUpdatedEvent.schema = Joi.object().keys({
-  action: Joi.string().valid('edited').required(),
-  issue: Joi.object().required(),
-  repository: Joi.object().required(),
-  comment: Joi.object().required()
-});
-
-CommentUpdatedEvent.parse = parseComment;
-// end the CommentUpdatedEvent
-
-// begin the UserAssignedEvent
+// definition of issue user assigned event
 const UserAssignedEvent = {
-  event: models.UserAssignedEvent
+  event: models.UserAssignedEvent,
+  schema: Joi.object().keys({
+    action: Joi.string().valid('assigned').required(),
+    issue: Joi.object().required(),
+    assignee: Joi.object().required(),
+    repository: Joi.object().required()
+  }),
+  parse: (data) => ({
+    issue: parseIssue(data.issue),
+    repository: parseRepository(data.repository),
+    assignee: {
+      id: data.assignee.id
+    }
+  })
 };
 
-UserAssignedEvent.schema = Joi.object().keys({
-  action: Joi.string().valid('assigned').required(),
-  issue: Joi.object().required(),
-  assignee: Joi.object().required(),
-  repository: Joi.object().required()
-});
-
-UserAssignedEvent.parse = (data) => ({
-  issue: parseIssue(data.issue),
-  repository: parseRepository(data.repository),
-  assignee: {
-    id: data.assignee.id
-  }
-});
-
-// end the UserAssignedEvent
-
-// begin the UserUnassignedEvent
+// definition of issue user unassigned event
 const UserUnassignedEvent = {
-  event: models.UserUnassignedEvent
+  event: models.UserUnassignedEvent,
+  schema: Joi.object().keys({
+    action: Joi.string().valid('unassigned').required(),
+    issue: Joi.object().required(),
+    assignee: Joi.object().required(),
+    repository: Joi.object().required()
+  }),
+  parse: (data) => ({
+    issue: parseIssue(data.issue),
+    repository: parseRepository(data.repository)
+  })
 };
 
-UserUnassignedEvent.schema = Joi.object().keys({
-  action: Joi.string().valid('unassigned').required(),
-  issue: Joi.object().required(),
-  assignee: Joi.object().required(),
-  repository: Joi.object().required()
-});
-
-UserUnassignedEvent.parse = (data) => ({
-  issue: parseIssue(data.issue),
-  repository: parseRepository(data.repository)
-});
-
-// end the UserUnassignedEvent
-
-// start of LabelUpdatedEvent
+// definition of issue label updated event
 const LabelUpdatedEvent = {
   event: models.LabelUpdatedEvent,
   schema: Joi.object().keys({
@@ -185,41 +183,33 @@ const LabelUpdatedEvent = {
   })
 };
 
-// end the LabelUnassignedEvent
-
-// begin the PullRequestCreatedEvent
+// definition of pull request created event
 const PullRequestCreatedEvent = {
-  event: models.PullRequestCreatedEvent
+  event: models.PullRequestCreatedEvent,
+  schema: Joi.object().keys({
+    action: Joi.string().valid('opened').required(),
+    pull_request: Joi.object().required(),
+    repository: Joi.object().required()
+  }),
+  parse: (data) => ({
+    pull_request: parsePullRequest(data),
+    repository: parseRepository(data.repository)
+  })
 };
 
-PullRequestCreatedEvent.schema = Joi.object().keys({
-  action: Joi.string().valid('opened').required(),
-  pull_request: Joi.object().required(),
-  repository: Joi.object().required()
-});
-
-PullRequestCreatedEvent.parse = (data) => ({
-  pull_request: parsePullRequest(data),
-  repository: parseRepository(data.repository)
-});
-// end the PullRequestCreatedEvent
-
-// begin the PullRequestClosedEvent
+// definition of pull request closed event
 const PullRequestClosedEvent = {
-  event: models.PullRequestClosedEvent
+  event: models.PullRequestClosedEvent,
+  schema: Joi.object().keys({
+    action: Joi.string().valid('closed').required(),
+    pull_request: Joi.object().required(),
+    repository: Joi.object().required()
+  }),
+  parse: (data) => ({
+    pull_request: parsePullRequest(data),
+    repository: parseRepository(data.repository)
+  })
 };
-
-PullRequestClosedEvent.schema = Joi.object().keys({
-  action: Joi.string().valid('closed').required(),
-  pull_request: Joi.object().required(),
-  repository: Joi.object().required()
-});
-
-PullRequestClosedEvent.parse = (data) => ({
-  pull_request: parsePullRequest(data),
-  repository: parseRepository(data.repository)
-});
-// end the PullRequestClosedEvent
 
 module.exports = new EventDetector('github', [
   IssueCreatedEvent,
