@@ -10,6 +10,10 @@
  */
 'use strict';
 
+const config = require('config');
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+const connection = mongoose.createConnection(config.MONGODB_URL);
 const IssueCreatedEvent = require('./IssueCreatedEvent');
 const IssueUpdatedEvent = require('./IssueUpdatedEvent');
 const CommentCreatedEvent = require('./CommentCreatedEvent');
@@ -29,5 +33,6 @@ module.exports = {
   UserUnassignedEvent,
   PullRequestCreatedEvent,
   PullRequestClosedEvent,
-  LabelUpdatedEvent
+  LabelUpdatedEvent,
+  Challenge: connection.model('Challenge', require('./Challenge')),
 };

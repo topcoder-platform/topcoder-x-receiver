@@ -12,8 +12,9 @@ const _ = require('lodash');
 const config = require('config');
 
 const logger = require('../../utils/logger');
+const Challenge = require('../../models').Challenge;
 
-module.exports = (provider) => (req, res, next) => {
+module.exports = (provider) => async (req, res, next) => {
   let repoNames = [];
   if (provider === 'github') {
     const repo = req.body.repository || {};
@@ -23,9 +24,10 @@ module.exports = (provider) => (req, res, next) => {
     repoNames = [repo.homepage, repo.http_url, repo.url, repo.ssh_url];
   }
   let found = false;
+  var challenges = await Challenge.find({archieved: false});
   _.forEach(repoNames, (r) => {
-    _.forEach(config.WATCH_REPOS, (wr) => {
-      if (wr === r) {
+    _.forEach(challenges, (challenge) => {
+      if (challenge.repoUrl === r) {
         found = true;
       }
     });

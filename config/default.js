@@ -14,19 +14,13 @@ const fs = require('fs');
  */
 
 module.exports = {
-  PORT: process.env.PORT || 3000, // eslint-disable-line no-magic-numbers
+  PORT: process.env.PORT || 3002, // eslint-disable-line no-magic-numbers
   LOG_LEVEL: process.env.LOG_LEVEL || 'info',
-  TOPIC: process.env.TOPIC || 'events_topic',
-  GITHUB_SECRET_TOKEN: process.env.GITHUB_SECRET_TOKEN || '',
-  GITLAB_SECRET_TOKEN: process.env.GITLAB_SECRET_TOKEN || '',
-  WATCH_REPOS: process.env.WATCH_REPOS ? process.env.WATCH_REPOS.split(',') : [
-    'https://github.com/cwdcwd/challengeFetcher'
-  ],
+  TOPIC: process.env.TOPIC || 'tc-x-events',
+  GITHUB_SECRET_TOKEN: process.env.GITHUB_SECRET_TOKEN || 'ghostar',
+  GITLAB_SECRET_TOKEN: process.env.GITLAB_SECRET_TOKEN || 'ghostar',
   KAFKA_OPTIONS: {
-    kafkaHost: process.env.KAFKA_HOST || 'localhost:9092',
-    sslOptions: {
-     cert: process.env.KAFKA_CLIENT_CERT || fs.readFileSync('./kafka_client.cer'),
-     key: process.env.KAFKA_CLIENT_CERT_KEY || fs.readFileSync('./kafka_client.key')
-    }
-  }
+    kafkaHost: process.env.KAFKA_HOST || 'localhost:9092'
+  },
+  MONGODB_URL: process.env.MONGODB_URI || 'mongodb://heroku_mx614sjn:4lndgg69o9t6qbrvob8o859e4o@ds141464.mlab.com:41464/heroku_mx614sjn'
 };
