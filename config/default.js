@@ -20,7 +20,11 @@ module.exports = {
   GITHUB_SECRET_TOKEN: process.env.GITHUB_SECRET_TOKEN || 'ghostar',
   GITLAB_SECRET_TOKEN: process.env.GITLAB_SECRET_TOKEN || 'ghostar',
   KAFKA_OPTIONS: {
-    kafkaHost: process.env.KAFKA_HOST || 'localhost:9092'
+    kafkaHost: process.env.KAFKA_HOST || 'localhost:9092',
+    sslOptions: {
+      cert: process.env.KAFKA_CLIENT_CERT || fs.readFileSync('./kafka_client.cer'),
+      key: process.env.KAFKA_CLIENT_CERT_KEY || fs.readFileSync('./kafka_client.key')
+   }
   },
   MONGODB_URL: process.env.MONGODB_URI || 'mongodb://heroku_mx614sjn:4lndgg69o9t6qbrvob8o859e4o@ds141464.mlab.com:41464/heroku_mx614sjn'
 };
