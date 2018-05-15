@@ -17,14 +17,13 @@ module.exports = {
   PORT: process.env.PORT || 3002, // eslint-disable-line no-magic-numbers
   LOG_LEVEL: process.env.LOG_LEVEL || 'info',
   TOPIC: process.env.TOPIC || 'tc-x-events',
-  GITHUB_SECRET_TOKEN: process.env.GITHUB_SECRET_TOKEN || 'ghostar',
-  GITLAB_SECRET_TOKEN: process.env.GITLAB_SECRET_TOKEN || 'ghostar',
+  WEBHOOK_SECRET_TOKEN: process.env.WEBHOOK_SECRET_TOKEN || 'ka75hsrq65cFEr61Hd4x',
   KAFKA_OPTIONS: {
     kafkaHost: process.env.KAFKA_HOST || 'localhost:9092',
     sslOptions: {
-      cert: process.env.KAFKA_CLIENT_CERT || fs.readFileSync('./kafka_client.cer'),
-      key: process.env.KAFKA_CLIENT_CERT_KEY || fs.readFileSync('./kafka_client.key')
-   }
+      cert: process.env.KAFKA_CLIENT_CERT || fs.readFileSync('./kafka_client.cer'), // eslint-disable-line no-sync
+      key: process.env.KAFKA_CLIENT_CERT_KEY || fs.readFileSync('./kafka_client.key') // eslint-disable-line no-sync
+    }
   },
-  MONGODB_URL: process.env.MONGODB_URI || 'mongodb://heroku_mx614sjn:4lndgg69o9t6qbrvob8o859e4o@ds141464.mlab.com:41464/heroku_mx614sjn'
+  MONGODB_URL: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ragnar'
 };

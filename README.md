@@ -32,11 +32,10 @@ The following config parameters are supported, they are defined in `config/defau
 | :----------------------------- | :----------------------------------------: | :------------------------------: |
 | PORT                           | the port the application will listen on    |  3000                            |
 | LOG_LEVEL                      | the log level                              |  info                            |
-| TOPIC                          | the kafka subscribe topic name             |  events_topic                    |
+| TOPIC                          | the kafka subscribe topic name             |  tc-x-events                    |
+| WEBHOOK_SECRET_TOKEN            | the webhook security token for githost, it must be same as `WEBHOOK_SECRET_TOKEN` configured for Topcoder-X-backend| `ka75hsrq65cFEr61Hd4x`|
 |KAFKA_OPTIONS                   | the connection option for kafka            |  see below about KAFKA options                   |
-| GITHUB_SECRET_TOKEN            | the webhook security token for github      |                                  |
-| GITLAB_SECRET_TOKEN            | the webhook security token for gitlab      |                                  |
-| WATCH_REPOS                    | the repos we want to watch                 |                                  |
+| MONGODB_URL  | the MongoDB URL which must be same as Ragnar tool | mongodb://127.0.0.1:27017/ragnar|
 
 KAFKA_OPTIONS should be object as described in https://github.com/SOHU-Co/kafka-node#kafkaclient
 For using with SSL, the options should be as
@@ -50,53 +49,7 @@ For using with SSL, the options should be as
  }
 ```
 
-To change the WATCH_REPOS, you'd better create a `config/local.js` file to override the WATCH_REPOS, see `config/sample-local.js` for example.
-
 `config/local.js` will not tracked by git.
-
-Normally you just need config the GITHUB_SECRET_TOKEN and GITLAB_SECRET_TOKEN (optional in this challenge):
-
-```shell
-export GITHUB_SECRET_TOKEN=...
-export GITLAB_SECRET_TOKEN=...
-```
-
-Or on windows:
-
-```shell
-set GITHUB_SECRET_TOKEN=...
-set GITLAB_SECRET_TOKEN=...
-```
-
-
-## GitHub Webhook Setup
-
-- login into github.com
-- go to the repository you want to watch
-- click: Settings -> Options(in the left panel) -> Webhooks
-- click: 'Add Webhook' button
-- fill the form:
-    - Payload URL: `https://<YOUR_HOST>/webhooks/github`,
-    for example: `https://4bb6c860.ngrok.io/webhooks/github`
-    - Content Type: application/json
-    - Secret: type your secret and remember it to set into GITHUB_SECRET_TOKEN
-    - Check: Send me everything
-    - Check: Active
-- click: 'Add Webhook' button
-
-## GitLab Webhook Setup (optional for this challenge)
-
-- login into gitlab.com
-- go to the repository you want to watch
-- click: Settings -> Integrations
-- fill the form: 
-    - URL: `https://<YOUR_HOST>/webhooks/gitlab`,
-    for example: `https://4bb6c860.ngrok.io/webhooks/gitlab`
-    - Secret Token: type your secret and remember it to set into GITLAB_SECRET_TOKEN
-    - Trigger: Check all the events
-    - Check: Enable SSL Verifications
-- click: 'Add Webhook' button
-
 
 ## Local Setup
 
@@ -104,17 +57,33 @@ set GITLAB_SECRET_TOKEN=...
 npm start
 ```
 
-Server should be started at port 3000.
+Server should be started at port 3002.
 
 use `ngrok` to make your local deploy accessible by internet:
 ```shell
-ngrok http 3000
+ngrok http 3002
 ```
+
+Copy the forwarding URL to set in `HOOK_BASE_URL` of topcoder-x-ui in config.json
+
+## Setup for verification
+Before verifying the tool, 4 service needs be configured and run them
+- processor
+- receiver
+- Ragnar Tool
+- Topcoder X (both backend and UI)
+
+First login in Ragnar tool with admin and Add owner for which requires topcoder handle, git host's username and type of git host.
+
+Go to Topcoder X UI login with above used topcoder username and
+- go to settings and make sure git hosts are correctly setup, if not click setup and authorize to setup.
+
+- Go to Topcoder X UI and go to project management and add a project from git account and click save, and edit the same project and click 'Add Webhooks' button (you need to add personnel access token), verify that webhooks are set up correctly on git host's project.
+
+Now, receiver service can receive the webhooks from git host's project. Now you can verify this service by following the verfication steps below
 
 ## GitHub Verification
 
-- properly config and run the `receiver` app.
-- properly config and run the `processor` app.
 - create an issue in the repo, you can see the logs in `receiver` and `processor`, the `issue.created` event is generated.
 - update an issue in the repo, you can see the logs in `receiver` and `processor`, the `issue.updated` event is generated.
 - create a comment on an issue, you can see the logs in `receiver` and `processor`, the `comment.created` event is generated.
@@ -128,8 +97,6 @@ ngrok http 3000
 
 ## Gitlab Verification
 
-- properly config and run the `receiver` app.
-- properly config and run the `processor` app.
 - create an issue in the repo, you can see the logs in `receiver` and `processor`, the `issue.created` event is generated.
 - update an issue in the repo, you can see the logs in `receiver` and `processor`, the `issue.updated` event is generated.
 - create a comment on an issue, you can see the logs in `receiver` and `processor`, the `comment.created` event is generated.

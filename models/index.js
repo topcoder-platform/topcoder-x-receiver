@@ -12,6 +12,7 @@
 
 const config = require('config');
 const mongoose = require('mongoose');
+
 mongoose.Promise = global.Promise;
 const connection = mongoose.createConnection(config.MONGODB_URL);
 const IssueCreatedEvent = require('./IssueCreatedEvent');
@@ -23,6 +24,7 @@ const UserUnassignedEvent = require('./UserUnassignedEvent');
 const PullRequestCreatedEvent = require('./PullRequestCreatedEvent');
 const PullRequestClosedEvent = require('./PullRequestClosedEvent');
 const LabelUpdatedEvent = require('./LabelUpdatedEvent');
+const Challenge = require('./Challenge');
 
 module.exports = {
   IssueCreatedEvent,
@@ -34,5 +36,5 @@ module.exports = {
   PullRequestCreatedEvent,
   PullRequestClosedEvent,
   LabelUpdatedEvent,
-  Challenge: connection.model('Challenge', require('./Challenge')),
+  Challenge: connection.model('Challenge', Challenge)
 };
