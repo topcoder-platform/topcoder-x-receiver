@@ -13,25 +13,22 @@ const config = require('config');
 const logger = require('../../utils/logger');
 
 module.exports = (provider) => (req, res, next) => {
+  let isValid = false;
   if (provider === 'github') {
-    const hash = crypto.createHmac('sha1', config.GITHUB_SECRET_TOKEN).update(req.rawBody).digest('hex');
-    if (`sha1=${hash}` !== req.header('X-Hub-Signature')) {
-      logger.info('Invalid Security Check. Make sure you set the secret token in webhook.');
-      const err = new Error('Invalid secret token');
-      err.status = 400;
-      return next(err);
-    }
-    return next();
+    const hash = crypto.createHmac('sha1', config.WEBHOOK_SECRET_TOKEN).update(req.rawBody).digest('hex');
+    isValid = `sha1=${hash}` === req.header('X-Hub-Signature');
   } else if (provider === 'gitlab') {
-    if (config.GITLAB_SECRET_TOKEN !== req.header('X-Gitlab-Token')) {
-      logger.info('Invalid Security Check. Make sure you set the secret token in webhook.');
-      const err = new Error('Invalid secret token');
-      err.status = 400;
-      return next(err);
-    }
+    isValid = config.WEBHOOK_SECRET_TOKEN === req.header('X-Gitlab-Token');
+  } else {
+    // unknown provider
     return next();
   }
 
-  // unknown provider
+  if (!isValid) {
+    logger.info('Invalid Security Check. Make sure you set the secret token in webhook.');
+    const err = new Error('Invalid secret token');
+    err.status = 400;
+    return next(err);
+  }
   return next();
 };
