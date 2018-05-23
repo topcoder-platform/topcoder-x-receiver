@@ -33,9 +33,8 @@ The following config parameters are supported, they are defined in `config/defau
 | PORT                           | the port the application will listen on    |  3000                            |
 | LOG_LEVEL                      | the log level                              |  info                            |
 | TOPIC                          | the kafka subscribe topic name             |  tc-x-events                    |
-| WEBHOOK_SECRET_TOKEN            | the webhook security token for githost, it must be same as `WEBHOOK_SECRET_TOKEN` configured for Topcoder-X-backend| `ka75hsrq65cFEr61Hd4x`|
-|KAFKA_OPTIONS                   | the connection option for kafka            |  see below about KAFKA options                   |
-| MONGODB_URL  | the MongoDB URL which must be same as Ragnar tool | mongodb://127.0.0.1:27017/ragnar|
+| KAFKA_OPTIONS                   | the connection option for kafka            |  see below about KAFKA options                   |
+| MONGODB_URL  | the MongoDB URL which must be same as Topcoder x tool | mongodb://127.0.0.1:27017/topcoderx|
 
 KAFKA_OPTIONS should be object as described in https://github.com/SOHU-Co/kafka-node#kafkaclient
 For using with SSL, the options should be as
@@ -64,21 +63,18 @@ use `ngrok` to make your local deploy accessible by internet:
 ngrok http 3002
 ```
 
-Copy the forwarding URL to set in `HOOK_BASE_URL` of topcoder-x-ui in config.json
+Copy the forwarding URL to set in `HOOK_BASE_URL` of topcoder-x in config.json
 
 ## Setup for verification
-Before verifying the tool, 4 service needs be configured and run them
+Before verifying the tool, 3 service needs be configured and run them
 - processor
 - receiver
-- Ragnar Tool
-- Topcoder X (both backend and UI)
-
-First login in Ragnar tool with admin and Add owner for which requires topcoder handle, git host's username and type of git host.
+- Topcoder X
 
 Go to Topcoder X UI login with above used topcoder username and
 - go to settings and make sure git hosts are correctly setup, if not click setup and authorize to setup.
 
-- Go to Topcoder X UI and go to project management and add a project from git account and click save, and edit the same project and click 'Add Webhooks' button (you need to add personnel access token), verify that webhooks are set up correctly on git host's project.
+- Go to Topcoder X UI and go to project management and add a project from git account and click save, and edit the same project and click 'Add Webhooks' button, verify that webhooks are set up correctly on git host's project.
 
 Now, receiver service can receive the webhooks from git host's project. Now you can verify this service by following the verfication steps below
 
