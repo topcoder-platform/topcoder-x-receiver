@@ -17,7 +17,6 @@ module.exports = {
   PORT: process.env.PORT || 3002, // eslint-disable-line no-magic-numbers
   LOG_LEVEL: process.env.LOG_LEVEL || 'info',
   TOPIC: process.env.TOPIC || 'tc-x-events',
-  WEBHOOK_SECRET_TOKEN: process.env.WEBHOOK_SECRET_TOKEN || 'ka75hsrq65cFEr61Hd4x',
   KAFKA_OPTIONS: {
     kafkaHost: process.env.KAFKA_HOST || 'localhost:9092',
     sslOptions: {
@@ -25,5 +24,5 @@ module.exports = {
       key: process.env.KAFKA_CLIENT_CERT_KEY || fs.readFileSync('./kafka_client.key') // eslint-disable-line no-sync
     }
   },
-  MONGODB_URL: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ragnar'
+  MONGODB_URL: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/topcoderx'
 };

@@ -9,16 +9,19 @@
  */
 'use strict';
 const crypto = require('crypto');
-const config = require('config');
 const logger = require('../../utils/logger');
+const Project = require('../../models').Project;
 
-module.exports = (provider) => (req, res, next) => {
+module.exports = (provider) => async (req, res, next) => {
   let isValid = false;
+  const params = req.body;
   if (provider === 'github') {
-    const hash = crypto.createHmac('sha1', config.WEBHOOK_SECRET_TOKEN).update(req.rawBody).digest('hex');
+    const projectDetail = await Project.findOne({repoUrl: params.repository.html_url});
+    const hash = crypto.createHmac('sha1', projectDetail.secretWebhookKey).update(req.rawBody).digest('hex');
     isValid = `sha1=${hash}` === req.header('X-Hub-Signature');
   } else if (provider === 'gitlab') {
-    isValid = config.WEBHOOK_SECRET_TOKEN === req.header('X-Gitlab-Token');
+    const projectDetail = await Project.findOne({repoUrl: params.project.web_url});
+    isValid = projectDetail.secretWebhookKey === req.header('X-Gitlab-Token');
   } else {
     // unknown provider
     return next();

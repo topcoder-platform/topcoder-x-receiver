@@ -24,7 +24,7 @@ const UserUnassignedEvent = require('./UserUnassignedEvent');
 const PullRequestCreatedEvent = require('./PullRequestCreatedEvent');
 const PullRequestClosedEvent = require('./PullRequestClosedEvent');
 const LabelUpdatedEvent = require('./LabelUpdatedEvent');
-const Challenge = require('./Challenge');
+const Project = require('./Project');
 
 module.exports = {
   IssueCreatedEvent,
@@ -36,5 +36,5 @@ module.exports = {
   PullRequestCreatedEvent,
   PullRequestClosedEvent,
   LabelUpdatedEvent,
-  Challenge: connection.model('Challenge', Challenge)
+  Project: connection.model('Project', Project)
 };

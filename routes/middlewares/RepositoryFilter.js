@@ -11,7 +11,7 @@
 const _ = require('lodash');
 
 const logger = require('../../utils/logger');
-const Challenge = require('../../models').Challenge;
+const Project = require('../../models').Project;
 
 module.exports = (provider) => async (req, res, next) => {
   let repoNames = [];
@@ -19,12 +19,12 @@ module.exports = (provider) => async (req, res, next) => {
     const repo = req.body.repository || {};
     repoNames = [repo.svn_url, repo.git_url, repo.ssh_url, repo.clone_url];
   } else if (provider === 'gitlab') {
-    const repo = req.body.repository || {};
-    repoNames = [repo.homepage, repo.http_url, repo.url, repo.ssh_url];
+    const repo = req.body.project || {};
+    repoNames = [repo.homepage, repo.http_url, repo.url, repo.ssh_url, repo.web_url];
   }
   let found = false;
-  const challenges = await Challenge.find({archieved: false});
-  found = _.some(challenges, (challenge) => _.includes(repoNames, challenge.repoUrl));
+  const projects = await Project.find({archived: false});
+  found = _.some(projects, (project) => _.includes(repoNames, project.repoUrl));
   if (found) {
     return next();
   }
