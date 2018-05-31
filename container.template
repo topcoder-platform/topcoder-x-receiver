@@ -1,0 +1,80 @@
+{
+   "family": "%s",
+   "requiresCompatibilities": ["EC2", "FARGATE"],
+   "networkMode": "awsvpc",
+   "executionRoleArn": "arn:aws:iam::%s:role/ecsTaskExecutionRole",
+   "cpu": "512",
+   "memory": "1024",
+   "containerDefinitions": [{
+      "name": "%s",
+      "memory": 1000,
+      "cpu" : 0,
+      "image": "%s.dkr.ecr.%s.amazonaws.com/%s:%s",
+      "environment": [
+          {
+            "name" : "DEBUG",
+            "value" : "%s"
+          },
+          {
+            "name" : "KAFKA_CLIENT_CERT",
+            "value" : "%s"
+          },
+          {
+            "name" : "KAFKA_CLIENT_CERT_KEY",
+            "value" : "%s"
+          },
+          {
+            "name" : "KAFKA_HOST",
+            "value" : "%s"
+          },
+          {
+            "name" : "LOG_LEVEL",
+            "value" : "%s"
+          },
+          {
+            "name" : "MONGODB_URI",
+            "value" : "%s"
+          },
+          {
+            "name" : "TOPIC",
+            "value" : "%s"
+          },
+          {
+            "name" : "ZOO_KEEPER",
+            "value" : "%s"
+          },
+          {
+            "name" : "NODE_ENV",
+            "value" : "%s"
+          },
+          {
+            "name" : "NPM_CONFIG_PRODUCTION",
+            "value" : "%s"
+          },
+          {
+            "name" : "PAPERTRAIL_API_TOKEN",
+            "value" : "%s"
+          },
+          {
+            "name" : "WEBSITE",
+            "value" : "%s"
+          }
+      ],
+      "portMappings": [
+        {
+          "hostPort": %s,
+          "protocol": "tcp",
+          "containerPort": %s
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/aws/ecs/%s",
+          "awslogs-region": "%s",
+          "awslogs-stream-prefix": "%s"
+        }
+      }
+    }
+  ]
+}
