@@ -1,4 +1,4 @@
-# Topcoder x receiver configuration
+# Topcoder X Receiver Configuration
 The following config parameters are supported, they are defined in `config/default.js` and can be configured in env variables:
 
 
