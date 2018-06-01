@@ -25,28 +25,7 @@ npm run lint
 
 ## Configuration
 
-The following config parameters are supported, they are defined in `config/default.js` and can be configured in system environment:
-
-
-| Name                           | Description                                | Default                          |
-| :----------------------------- | :----------------------------------------: | :------------------------------: |
-| PORT                           | the port the application will listen on    |  3000                            |
-| LOG_LEVEL                      | the log level                              |  info                            |
-| TOPIC                          | the kafka subscribe topic name             |  tc-x-events                    |
-| KAFKA_OPTIONS                   | the connection option for kafka            |  see below about KAFKA options                   |
-| MONGODB_URL  | the MongoDB URL which must be same as Topcoder x tool | mongodb://127.0.0.1:27017/topcoderx|
-
-KAFKA_OPTIONS should be object as described in https://github.com/SOHU-Co/kafka-node#kafkaclient
-For using with SSL, the options should be as
-```
- {
-    kafkaHost: '<server>',
-    sslOptions: {
-      cert: '<certificate>', 
-      key:  '<key>'
-    }
- }
-```
+See "configuration.md"
 
 `config/local.js` will not tracked by git.
 
@@ -62,8 +41,6 @@ use `ngrok` to make your local deploy accessible by internet:
 ```shell
 ngrok http 3002
 ```
-
-Copy the forwarding URL to set in `HOOK_BASE_URL` of topcoder-x in config.json
 
 ## Setup for verification
 Before verifying the tool, 3 service needs be configured and run them
