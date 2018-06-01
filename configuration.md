@@ -41,19 +41,15 @@ Configure a Github project with a webhook with a format like this: https://<rece
 
 You can test other events, but just validating that an issue.created event is generated in Kafka is enough to smoke test the receiver is set up properly.  
 
-#### Debugging
-You can re-run and debug the responses to webhook requests on Github, in the configuration for the webhook.  This can be useful if things aren't coming through properly in the receiver.
-
-## Github Verification
+## Gitlab Verification
 
 #### Webhook configuration
 
 Configure a Gitlab project with a webhook with a format like this: https://<receiver URL>:<receiver port>/webhooks/gitlab
 
 #### Smoke test
-- Create an issue in the repo, you can see the logs in `receiver`, the `issue.created` event is generated.
 
-You can test other events, but just validating that an issue.created event is generated in Kafka is enough to smoke test the receiver is set up properly.  
+See above - the steps are the same for Github and Gitlab
 
-#### Debugging
-You can re-run and debug the responses to webhook requests on Gitlab, in the configuration for the webhook.  This can be useful if things aren't coming through properly in the receiver.
+## Debugging
+You can re-run and debug the responses to webhook requests on Github and Gitlab, in the configuration for the webhook.  This can be useful if things aren't coming through properly in the receiver.
