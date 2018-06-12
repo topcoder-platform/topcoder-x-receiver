@@ -17,6 +17,7 @@ mongoose.Promise = global.Promise;
 const connection = mongoose.createConnection(config.MONGODB_URL);
 const IssueCreatedEvent = require('./IssueCreatedEvent');
 const IssueUpdatedEvent = require('./IssueUpdatedEvent');
+const IssueClosedEvent = require('./IssueClosedEvent');
 const CommentCreatedEvent = require('./CommentCreatedEvent');
 const CommentUpdatedEvent = require('./CommentUpdatedEvent');
 const UserAssignedEvent = require('./UserAssignedEvent');
@@ -36,5 +37,6 @@ module.exports = {
   PullRequestCreatedEvent,
   PullRequestClosedEvent,
   LabelUpdatedEvent,
-  Project: connection.model('Project', Project)
+  Project: connection.model('Project', Project),
+  IssueClosedEvent
 };

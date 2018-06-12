@@ -123,6 +123,26 @@ const IssueUpdatedEvent = {
   parse: parseIssueEventData
 };
 
+// definition of issue closed event
+const IssueClosedEvent = {
+  event: models.IssueClosedEvent,
+  schema: Joi.object().keys({
+    object_kind: Joi.string().valid('issue').required(),
+    object_attributes: Joi.object().keys({
+      state: Joi.string().valid('closed').required(),
+      action: Joi.string().valid('close').required()
+    }).required(),
+    project: Joi.object().required()
+  }),
+  parse: (data) => ({
+    issue: parseIssue(data, data.object_attributes),
+    repository: parseProject(data.project),
+    assignee: {
+      id: data.object_attributes.assignee_id
+    }
+  })
+};
+
 // definition of issue comment created event
 const CommentCreatedEvent = {
   event: models.CommentCreatedEvent,
@@ -244,6 +264,7 @@ const PullRequestClosedEvent = {
 module.exports = new EventDetector('gitlab', [
   IssueCreatedEvent,
   IssueUpdatedEvent,
+  IssueClosedEvent,
   CommentCreatedEvent,
   UserAssignedEvent,
   UserUnassignedEvent,

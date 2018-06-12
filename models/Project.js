@@ -14,15 +14,14 @@ const schema = new mongoose.Schema({
   title: {type: String, required: true},
   tcDirectId: {type: Number, required: true},
   repoUrl: {type: String, required: true},
-  rocketChatWebhook: {type: String, required: true},
-  rocketChatChannelName: {type: String, required: true},
+  rocketChatWebhook: {type: String, required: false},
+  rocketChatChannelName: {type: String, required: false},
   archived: {type: String, required: true},
   username: {type: String, required: true},
   secretWebhookKey: {type: String, required: true}
 });
 
-// project id, provider, repositoryId must be unique
-schema.index({tcDirectId: 1}, {unique: true});
+schema.index({tcDirectId: 1});
 
 
 module.exports = schema;

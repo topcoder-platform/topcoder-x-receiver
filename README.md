@@ -67,6 +67,7 @@ Now, receiver service can receive the webhooks from git host's project. Now you 
 - create a pull request, you can see the logs in `receiver` and `processor`, the `pull_request.created` event is generated.
 - close a pull request without merge, you can see the logs in `receiver` and `processor`, the `pull_request.closed` event is generated and the `merged` property is `false`.
 - merge a pull request, you can see the logs in `receiver` and `processor`, the `pull_request.closed` event is generated and the `merged` property is `true`.
+- close an issue in the repo, you can see the logs in `receiver` and `processor`, the `issue.closed` event is generated
 
 ## Gitlab Verification
 
@@ -79,3 +80,4 @@ Now, receiver service can receive the webhooks from git host's project. Now you 
 - create a pull request, you can see the logs in `receiver` and `processor`, the `pull_request.created` event is generated.
 - close a pull request without merge, you can see the logs in `receiver` and `processor`, the `pull_request.closed` event is generated and the `merged` property is `false`.
 - merge a pull request, you can see the logs in `receiver` and `processor`, the `pull_request.closed` event is generated and the `merged` property is `true`.
+- close an issue in the repo, you can see the logs in `receiver` and `processor`, the `issue.closed` event is generated
