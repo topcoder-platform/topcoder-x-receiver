@@ -13,13 +13,13 @@ The following config parameters are supported, they are defined in `config/defau
 |KAFKA_CLIENT_CERT | The Kafka SSL certificate to use when connecting| Read from kafka_client.cer file, but this can be set as a string like it is on Heroku |
 |KAFKA_CLIENT_CERT_KEY | The Kafka SSL certificate key to use when connecting| Read from kafka_client.key file, but this can be set as a string like it is on Heroku|
 
-KAFKA_OPTIONS should be object as described in https://github.com/SOHU-Co/kafka-node#kafkaclient
+KAFKA_OPTIONS should be object as described in https://github.com/oleksiyk/kafka#ssl
 For using with SSL, the options should be as
 ```
  {
-    kafkaHost: '<server>',
-    sslOptions: {
-      cert: '<certificate>',
+    connectionString: '<server>',
+    ssl: {
+      cert: '<certificate>', 
       key:  '<key>'
     }
  }
