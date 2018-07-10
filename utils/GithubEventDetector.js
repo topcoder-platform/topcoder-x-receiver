@@ -110,6 +110,23 @@ const IssueUpdatedEvent = {
   })
 };
 
+// definition of issue closed event
+const IssueClosedEvent = {
+  event: models.IssueClosedEvent,
+  schema: Joi.object().keys({
+    action: Joi.string().valid('closed').required(),
+    issue: Joi.object().required(),
+    repository: Joi.object().required()
+  }),
+  parse: (data) => ({
+    issue: parseIssue(data.issue),
+    repository: parseRepository(data.repository),
+    assignee: {
+      id: data.issue.assignee ? data.issue.assignee.id : null
+    }
+  })
+};
+
 // definition of issue comment updated event
 const CommentCreatedEvent = {
   event: models.CommentCreatedEvent,
@@ -214,6 +231,7 @@ const PullRequestClosedEvent = {
 module.exports = new EventDetector('github', [
   IssueCreatedEvent,
   IssueUpdatedEvent,
+  IssueClosedEvent,
   CommentCreatedEvent,
   CommentUpdatedEvent,
   UserAssignedEvent,

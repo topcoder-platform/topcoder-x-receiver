@@ -11,20 +11,20 @@
   },
   "dependencies": {
     "body-parser": "~1.17.1",
-    "config": "^1.26.2",
+    "config": "^1.30.0",
     "cookie-parser": "~1.4.3",
-    "debug": "~2.6.3",
-    "express": "~4.15.2",
-    "joi": "^11.0.2",
-    "kafka-node": "^2.2.3",
+    "debug": "^2.6.9",
+    "express": "^4.15.5",
+    "joi": "^11.4.0",
+    "mongoose": "^4.13.14",
     "morgan": "~1.8.1",
-    "mongoose": "^4.12.3",
-    "winston": "^2.3.1"
+    "no-kafka": "^3.2.10",
+    "winston": "^2.4.2"
   },
   "devDependencies": {
     "eslint-config-topcoder": "^2.0.0",
     "eslint-plugin-babel": "^4.1.2",
     "eslint-plugin-chai-expect": "^1.1.1",
-    "eslint-plugin-react": "^7.2.0"
+    "eslint-plugin-react": "^7.9.1"
   }
 }
