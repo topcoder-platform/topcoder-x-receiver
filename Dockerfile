@@ -1,8 +1,15 @@
-FROM node:8.9-alpine
-WORKDIR /usr/src/app
-COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
-RUN echo "installing packages"
-RUN npm install --silent
+# Use the base image with Node.js 8.12
+FROM node:8.12
+
+# Set working directory for future use
+WORKDIR /topcoder-x-receiver
+
+COPY package.json .
+COPY package-lock.json .
+
+# Install the dependencies from package.json
+RUN npm install
+
 COPY . .
-EXPOSE 80
-CMD npm start
+
+ENTRYPOINT npm start

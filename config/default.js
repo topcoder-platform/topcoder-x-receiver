@@ -1,4 +1,5 @@
 'use strict';
+require('dotenv').config();
 const fs = require('fs');
 
 /*
@@ -21,7 +22,8 @@ module.exports = {
     connectionString: process.env.KAFKA_HOST || 'localhost:9092',
     ssl: {
       cert: process.env.KAFKA_CLIENT_CERT || fs.readFileSync('./kafka_client.cer'), // eslint-disable-line no-sync
-      key: process.env.KAFKA_CLIENT_CERT_KEY || fs.readFileSync('./kafka_client.key') // eslint-disable-line no-sync
+      key: process.env.KAFKA_CLIENT_CERT_KEY || fs.readFileSync('./kafka_client.key'), // eslint-disable-line no-sync
+      passphrase: process.env.KAFKA_CLIENT_CERT_KEY_PASS || 'secret'
     }
   },
   MONGODB_URL: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/topcoderx'

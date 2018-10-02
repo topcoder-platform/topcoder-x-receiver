@@ -7,11 +7,12 @@ The following config parameters are supported, they are defined in `config/defau
 | PORT                                   | The port the application will listen on    |  3002                            |
 | LOG_LEVEL                              | The log level                              |  info                            |
 | MONGODB_URI                            | The MongoDB URI.  This needs to be the same MongoDB used by topcoder-x-receiver, topcoder-x-processor, and topcoder-x-site                           | mongodb://127.0.0.1:27017/topcoderx |
-|TOPIC  | The Kafka topic where events are published.  This must be the same as the configured value for topcoder-x-processor| |
+|TOPIC  | The Kafka topic where events are published.  This must be the same as the configured value for topcoder-x-processor| tc-x-events |
 |KAFKA_OPTIONS | Kafka connection options| |
 |KAFKA_HOST | The Kafka host to connect to| localhost:9092 |
 |KAFKA_CLIENT_CERT | The Kafka SSL certificate to use when connecting| Read from kafka_client.cer file, but this can be set as a string like it is on Heroku |
 |KAFKA_CLIENT_CERT_KEY | The Kafka SSL certificate key to use when connecting| Read from kafka_client.key file, but this can be set as a string like it is on Heroku|
+|KAFKA_CLIENT_CERT_KEY_PASS | The passphrase of certificate key | |
 
 KAFKA_OPTIONS should be object as described in https://github.com/oleksiyk/kafka#ssl
 For using with SSL, the options should be as

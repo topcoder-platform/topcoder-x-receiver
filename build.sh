@@ -1,66 +1,84 @@
 #!/bin/bash
 set -eo pipefail
 
-# Builds Docker image of Topcoder-X Receiver application.
-# This script expects a single argument: NODE_ENV, which must be either
-# "development" or "production".
+# This script expects 2 arguments:
+#   $BUILD_TYPE: The build type, like "local", "dev", "test", "prod". Required.
+#   $ENV_FOLDER: The folder containing env files. Optional.
+#
+# If $ENV_FOLDER is not present, then environment values will be used;
+# otherwise the topcoder-x-receiver.env.default and topcoder-x-receiver.env.$BUILD_TYPE
+# files within $ENV_FOLDER will be used.
 
-NODE_ENV=$1
+BUILD_TYPE=$1
+ENV_FOLDER="$2"
+APP="topcoder-x-receiver"
 
-ENV=$1
+if [ -z "$BUILD_TYPE" ]; then
+  echo "Must provide the build type to build"
+  exit 1
+fi
 
-source buildvar.conf
-SECRET_FILE_NAME="${APPNAME}-buildsecvar.conf"
-cp ./../buildscript/$APPNAME/$SECRET_FILE_NAME.enc .
-#ccdecrypt -f $SECRET_FILE_NAME.cpt -K $SECPASSWD
-openssl enc -aes-256-cbc -d -in $SECRET_FILE_NAME.enc -out $SECRET_FILE_NAME -k $SECPASSWD
-source $SECRET_FILE_NAME
+ENV_FILE=".env.$BUILD_TYPE.tmp"
+DEFAULT_FILE=".env.default.tmp"
+rm -f "$ENV_FILE"
+rm -f "$DEFAULT_FILE"
 
-AWS_REGION=$(eval "echo \$${ENV}_AWS_REGION")
-AWS_ACCESS_KEY_ID=$(eval "echo \$${ENV}_AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY=$(eval "echo \$${ENV}_AWS_SECRET_ACCESS_KEY")
-AWS_ACCOUNT_ID=$(eval "echo \$${ENV}_AWS_ACCOUNT_ID")
-AWS_REPOSITORY=$(eval "echo \$${ENV}_AWS_REPOSITORY")
+if [ -z "$ENV_FOLDER" ]; then
+  # Use environment values
+  touch "$ENV_FILE"
+  touch "$DEFAULT_FILE"
 
-#App variables
-KAFKA_CLIENT_CERT=$(eval "echo \$${ENV}_KAFKA_CLIENT_CERT")
-KAFKA_CLIENT_CERT_KEY=$(eval "echo \$${ENV}_KAFKA_CLIENT_CERT_KEY")
-KAFKA_HOST=$(eval "echo \$${ENV}_KAFKA_URL")
-ZOO_KEEPER=$(eval "echo \$${ENV}_ZOO_KEEPER")
-TOPIC=$(eval "echo \$${ENV}_TOPIC")
-MONGODB_URI=$(eval "echo \$${ENV}_MONGODB_URI")
+  # Loop the environment values, find the ones start with DEFAULT_ and $BUILD_TYPE_
+  # Assuming given $BUILD_TYPE is "prod" and environment has following values:
+  #   DEFAULT_VERSION=1.0
+  #   DEFAULT_SECRET=111111
+  #   PROD_PORT=80
+  #   PROD_SECRET=654321
+  #   LOCAL_PORT=8080
+  #   LOCAL_SECRET=123456
+  # Then the generated .env file will have following content:
+  #   VERSION=1.0
+  #   PORT=80
+  #   SECRET=654321
+  BUILD_TYPE_UPPER=`echo $BUILD_TYPE | awk '{print toupper($0)}'`
+  for var in $(compgen -e); do
+    if [[ "$var" =~ ^DEFAULT\_.* ]]; then
+      tripVar=${var#DEFAULT_}
+      echo $tripVar=${!var} >> "$DEFAULT_FILE"
+    fi
+    if [[ "$var" =~ ^$BUILD_TYPE_UPPER\_.* ]]; then
+      tripVar=${var#"$BUILD_TYPE_UPPER"_}
+      echo $tripVar=${!var} >> "$ENV_FILE"
+    fi
+  done
 
-LOG_LEVEL=$(eval "echo \$${ENV}_LOG_LEVEL")
-NODE_ENV=$(eval "echo \$${ENV}_NODE_ENV")
-NODE_PORT=$(eval "echo \$${ENV}_NODE_PORT")
-JWKSURI=$(eval "echo \$${ENV}_JWKSURI")
-TEMPLATE_MAP=$(eval "echo \$${ENV}_TEMPLATE_MAP")
-
-TAG=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/ragnar:$CIRCLE_SHA1
-
-docker build -t $TAG .
-
-# Copies "node_modules" from the created image, if necessary for caching.
-docker create --name app $TAG
-
-if [ -d node_modules ]
-then
-  # If "node_modules" directory already exists, we should compare
-  # "package-lock.json" from the code and from the container to decide,
-  # whether we need to re-cache, and thus to copy "node_modules" from
-  # the Docker container.
-  mv package-lock.json old-package-lock.json
-  docker cp app:/usr/src/app/package-lock.json package-lock.json
- # docker cp .env app:/usr/src/app/
-  set +eo pipefail
-  UPDATE_CACHE=$(cmp package-lock.json old-package-lock.json)
-  set -eo pipefail
 else
-  # If "node_modules" does not exist, then cache must be created.
-  UPDATE_CACHE=1
+  if [ ! -d "$ENV_FOLDER" ]; then
+    echo "$ENV_FOLDER does not exist"
+    exit 1
+  fi
+
+  P_DEFAULT_FILE="$ENV_FOLDER/$APP.env.default"
+  P_ENV_FILE="$ENV_FOLDER/$APP.env.$BUILD_TYPE"
+
+  if [ ! -f "$P_DEFAULT_FILE" ]; then
+    echo "$P_DEFAULT_FILE does not exist"
+    exit 1
+  fi
+  cp -f "$P_DEFAULT_FILE" "$DEFAULT_FILE"
+
+  if [ ! -f "$P_ENV_FILE" ]; then
+      echo "Will only use default env since $P_ENV_FILE does not exist"
+      touch "$ENV_FILE"
+  else
+      cp -f "$P_ENV_FILE" "$ENV_FILE"
+  fi
 fi
 
-if [ "$UPDATE_CACHE" == 1 ]
-then
-  docker cp app:/usr/src/app/node_modules .
-fi
+awk -F= '!a[$1]++' "$ENV_FILE" "$DEFAULT_FILE" > .env
+
+rm -f "$ENV_FILE"
+rm -f "$DEFAULT_FILE"
+
+# Build docker image
+docker build -t $APP:$BUILD_TYPE -f Dockerfile .
