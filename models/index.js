@@ -11,10 +11,23 @@
 'use strict';
 
 const config = require('config');
-const mongoose = require('mongoose');
+const dynamoose = require('dynamoose');
 
-mongoose.Promise = global.Promise;
-const connection = mongoose.createConnection(config.MONGODB_URL);
+dynamoose.AWS.config.update({
+  accessKeyId: config.DYNAMODB.AWS_ACCESS_KEY_ID,
+  secretAccessKey: config.DYNAMODB.AWS_SECRET_ACCESS_KEY,
+  region: config.DYNAMODB.AWS_REGION
+});
+
+if (config.DYNAMODB.IS_LOCAL) {
+  dynamoose.local();
+}
+
+dynamoose.setDefaults({
+  create: false,
+  update: false
+});
+
 const IssueCreatedEvent = require('./IssueCreatedEvent');
 const IssueUpdatedEvent = require('./IssueUpdatedEvent');
 const IssueClosedEvent = require('./IssueClosedEvent');
@@ -37,6 +50,6 @@ module.exports = {
   PullRequestCreatedEvent,
   PullRequestClosedEvent,
   LabelUpdatedEvent,
-  Project: connection.model('Project', Project),
+  Project: dynamoose.model('Project', Project),
   IssueClosedEvent
 };

@@ -14,9 +14,9 @@
     "config": "^1.30.0",
     "cookie-parser": "~1.4.3",
     "debug": "^2.6.9",
+    "dynamoose": "^1.1.0",
     "express": "^4.15.5",
     "joi": "^11.4.0",
-    "mongoose": "^4.13.14",
     "morgan": "~1.8.1",
     "no-kafka": "^3.2.10",
     "winston": "^2.4.2"
