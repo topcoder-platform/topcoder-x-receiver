@@ -64,7 +64,7 @@ workflows:
           filters:
             branches:
               only:
-                - develop
+                - dev-circleci
       - "build-prod":
           context : org-global
           filters:
