@@ -50,6 +50,6 @@ module.exports = {
   PullRequestCreatedEvent,
   PullRequestClosedEvent,
   LabelUpdatedEvent,
-  Project: dynamoose.model('Project', Project),
+  Project: dynamoose.model('Topcoder_X.Project', Project),
   IssueClosedEvent
 };
