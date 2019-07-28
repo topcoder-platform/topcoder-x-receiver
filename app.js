@@ -12,6 +12,18 @@ const express = require('express');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const healthcheck = require('topcoder-healthcheck-dropin');
+
+/**
+ * Method to check the service status
+ * @returns {Object} The returned status
+ */
+function check() {
+  // No checks to run. The output of this itself is an indication that the app is actively running
+  return {
+    checksRun: 1
+  };
+}
 
 const webhooks = require('./routes/webhooks');
 
@@ -25,6 +37,8 @@ app.use(bodyParser.json({
 }));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
+
+app.use(healthcheck.middleware([check]));
 
 app.use('/webhooks', webhooks);
 

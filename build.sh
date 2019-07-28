@@ -25,7 +25,7 @@ AWS_REPOSITORY=$(eval "echo \$${ENV}_AWS_REPOSITORY")
 #App variables
 KAFKA_CLIENT_CERT=$(eval "echo \$${ENV}_KAFKA_CLIENT_CERT")
 KAFKA_CLIENT_CERT_KEY=$(eval "echo \$${ENV}_KAFKA_CLIENT_CERT_KEY")
-KAFKA_HOST=$(eval "echo \$${ENV}_KAFKA_URL")
+KAFKA_URL=$(eval "echo \$${ENV}_KAFKA_URL")
 ZOO_KEEPER=$(eval "echo \$${ENV}_ZOO_KEEPER")
 TOPIC=$(eval "echo \$${ENV}_TOPIC")
 MONGODB_URI=$(eval "echo \$${ENV}_MONGODB_URI")

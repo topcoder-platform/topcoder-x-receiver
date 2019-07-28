@@ -8,7 +8,7 @@ The following config parameters are supported, they are defined in `config/defau
 | LOG_LEVEL                              | The log level                              |  info                            |
 |TOPIC  | The Kafka topic where events are published.  This must be the same as the configured value for topcoder-x-processor| |
 |KAFKA_OPTIONS | Kafka connection options| |
-|KAFKA_HOST | The Kafka host to connect to| localhost:9092 |
+|KAFKA_URL | The Kafka host to connect to| localhost:9092 |
 |KAFKA_CLIENT_CERT | The Kafka SSL certificate to use when connecting| Read from kafka_client.cer file, but this can be set as a string like it is on Heroku |
 |KAFKA_CLIENT_CERT_KEY | The Kafka SSL certificate key to use when connecting| Read from kafka_client.key file, but this can be set as a string like it is on Heroku|
 |AWS_ACCESS_KEY_ID | The Amazon certificate key to use when connecting. Use local dynamodb you can set fake value|FAKE_ACCESS_KEY_ID |

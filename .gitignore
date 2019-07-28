@@ -31,3 +31,5 @@ npm-debug.log
 
 /config/local.js
 .DS_Store
+
+package-lock.json

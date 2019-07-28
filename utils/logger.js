@@ -9,8 +9,8 @@
  * @version 1.0
  */
 'use strict';
-const winston = require('winston');
 const config = require('config');
+const winston = require('winston');
 
 const logger = new winston.Logger({
   transports: [
