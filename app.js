@@ -59,4 +59,17 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   });
 });
 
+process.on('uncaughtException', (err) => {
+  // Check if error related to Dynamodb conn
+  if (err.code === 'NetworkingError' && err.region) {
+    logger.error('DynamoDB connection failed.');
+  }
+  logger.logFullError(err, 'system');
+});
+
+// handle and log unhanled rejection
+process.on('unhandledRejection', (err) => {
+  logger.logFullError(err, 'system');
+});
+
 module.exports = app;
