@@ -29,22 +29,23 @@ builddeploy_steps: &builddeploy_steps
       - run: *install_dependency
       - run: *install_deploysuite
       - restore_cache: *restore_cache_settings_for_build
-      - run: docker build -t topcoder-x-receiver:latest .
+      - run: ./builddocker.sh ${APPNAME}
       - save_cache: *save_cache_settings
       - deploy:
           name: Running MasterScript.
           command: |
             ./awsconfiguration.sh $DEPLOY_ENV
             source awsenvconf
-            ./buildenv.sh -e $DEPLOY_ENV -b ${DEPLOY_ENV}-topcoder-x-receiver-deployvar
+            ./buildenv.sh -e $DEPLOY_ENV -b ${DEPLOY_ENV}-${APPNAME}-deployvar
             source buildenvvar
-            ./master_deploy.sh -d ECS -e $DEPLOY_ENV -t latest -s dev-global-appvar,${DEPLOY_ENV}-topcoder-x-receiver-appvar -i topcoder-x-receiver
+            ./master_deploy.sh -d ECS -e $DEPLOY_ENV -t latest -s ${DEPLOY_ENV}-global-appvar,${DEPLOY_ENV}-${APPNAME}-appvar -i ${APPNAME}
 jobs:
   # Build & Deploy against development backend
   "build-dev":
     <<: *defaults
     environment:
       DEPLOY_ENV: "dev"
+      APPNAME: "topcoder-x-receiver"
     steps: *builddeploy_steps
 
   # Build & Deploy against production backend
@@ -52,6 +53,7 @@ jobs:
     <<: *defaults
     environment:
       DEPLOY_ENV: "prod"
+      APPNAME: "topcoder-x-receiver"
     steps: *builddeploy_steps
 
 workflows:
