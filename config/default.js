@@ -14,7 +14,7 @@ const fs = require('fs');
  */
 
 module.exports = {
-  PORT: process.env.PORT || 3002, // eslint-disable-line no-magic-numbers
+  PORT: process.env.PORT || 3000, // eslint-disable-line no-magic-numbers
   LOG_LEVEL: process.env.LOG_LEVEL || 'info',
   TOPIC: process.env.TOPIC || 'tc-x-events',
   KAFKA_OPTIONS: {
