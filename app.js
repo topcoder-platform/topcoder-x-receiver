@@ -9,10 +9,11 @@
  */
 'use strict';
 const express = require('express');
-const logger = require('morgan');
+// const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const healthcheck = require('topcoder-healthcheck-dropin');
+const logger = require('./utils/logger');
 
 /**
  * Method to check the service status
@@ -29,7 +30,7 @@ const webhooks = require('./routes/webhooks');
 
 const app = express();
 
-app.use(logger('dev'));
+// app.use(logger('dev'));
 app.use(bodyParser.json({
   verify: (req, res, buf) => {
     req.rawBody = buf.toString();
@@ -49,7 +50,7 @@ app.use((req, res, next) => {
   next(err);
 });
 
-// error handler
+// // error handler
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   console.log(err);
   res.status(err.status || 500); // eslint-disable-line no-magic-numbers
@@ -60,16 +61,20 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 });
 
 process.on('uncaughtException', (err) => {
+  // logger.error('Exception: ', err);
   // Check if error related to Dynamodb conn
   if (err.code === 'NetworkingError' && err.region) {
     logger.error('DynamoDB connection failed.');
   }
   logger.logFullError(err, 'system');
+  // console.log(err);
 });
 
 // handle and log unhanled rejection
 process.on('unhandledRejection', (err) => {
+  // logger.error('Rejection: ', err);
   logger.logFullError(err, 'system');
+  // console.log(err);
 });
 
 module.exports = app;
