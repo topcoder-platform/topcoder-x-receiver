@@ -14,6 +14,7 @@ const Joi = require('joi');
 const _ = require('lodash');
 
 const models = require('../models');
+const logger = require('./logger');
 const EventDetector = require('./EventDetector');
 
 /**
@@ -272,3 +273,5 @@ module.exports = new EventDetector('gitlab', [
   PullRequestCreatedEvent,
   PullRequestClosedEvent
 ]);
+
+logger.buildService(module.exports);
