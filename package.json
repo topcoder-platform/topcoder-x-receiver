@@ -16,11 +16,12 @@
     "debug": "^2.6.9",
     "dynamoose": "^1.1.0",
     "express": "^4.17.1",
+    "get-parameter-names": "^0.3.0",
+    "global-request-logger": "^0.1.1",
     "joi": "^11.4.0",
-    "morgan": "^1.9.1",
     "no-kafka": "^3.4.3",
     "topcoder-healthcheck-dropin": "^1.0.3",
-    "winston": "^2.4.2"
+    "winston": "^2.4.3"
   },
   "devDependencies": {
     "eslint-config-topcoder": "^2.0.0",
