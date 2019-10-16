@@ -9,6 +9,7 @@
  */
 'use strict';
 const express = require('express');
+// const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const healthcheck = require('topcoder-healthcheck-dropin');
@@ -60,16 +61,20 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 });
 
 process.on('uncaughtException', (err) => {
+  // logger.error('Exception: ', err);
   // Check if error related to Dynamodb conn
   if (err.code === 'NetworkingError' && err.region) {
     logger.error('DynamoDB connection failed.');
   }
   logger.logFullError(err, 'system');
+  // console.log(err);
 });
 
 // handle and log unhanled rejection
 process.on('unhandledRejection', (err) => {
+  // logger.error('Rejection: ', err);
   logger.logFullError(err, 'system');
+  // console.log(err);
 });
 
 module.exports = app;
