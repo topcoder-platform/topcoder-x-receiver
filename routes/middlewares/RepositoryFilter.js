@@ -12,6 +12,7 @@ const _ = require('lodash');
 
 const logger = require('../../utils/logger');
 const Project = require('../../models').Project;
+const dbHelper = require('../../utils/db-helper');
 
 module.exports = (provider) => async (req, res, next) => {
   let repoNames = [];
@@ -22,9 +23,10 @@ module.exports = (provider) => async (req, res, next) => {
     const repo = req.body.project || {};
     repoNames = [repo.homepage, repo.http_url, repo.url, repo.ssh_url, repo.web_url];
   }
-  let found = false;
-  const projects = await Project.find({archived: false});
-  found = _.some(projects, (project) => _.includes(repoNames, project.repoUrl));
+  const projects = await dbHelper.scan(Project, {
+    archived: 'false'
+  });
+  const found = _.some(projects, (project) => _.includes(repoNames, project.repoUrl));
   if (found) {
     return next();
   }

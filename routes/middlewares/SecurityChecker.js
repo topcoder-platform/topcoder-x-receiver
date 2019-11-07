@@ -11,16 +11,22 @@
 const crypto = require('crypto');
 const logger = require('../../utils/logger');
 const Project = require('../../models').Project;
+const dbHelper = require('../../utils/db-helper');
 
 module.exports = (provider) => async (req, res, next) => {
   let isValid = false;
   const params = req.body;
   if (provider === 'github') {
-    const projectDetail = await Project.findOne({repoUrl: params.repository.html_url});
+    const projectDetail = await dbHelper.scanOne(Project, {
+      repoUrl: params.repository.html_url
+    });
+
     const hash = crypto.createHmac('sha1', projectDetail.secretWebhookKey).update(req.rawBody).digest('hex');
     isValid = `sha1=${hash}` === req.header('X-Hub-Signature');
   } else if (provider === 'gitlab') {
-    const projectDetail = await Project.findOne({repoUrl: params.project.web_url});
+    const projectDetail = await dbHelper.scanOne(Project, {
+      repoUrl: params.project.web_url
+    });
     isValid = projectDetail.secretWebhookKey === req.header('X-Gitlab-Token');
   } else {
     // unknown provider

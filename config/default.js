@@ -14,15 +14,20 @@ const fs = require('fs');
  */
 
 module.exports = {
-  PORT: process.env.PORT || 3002, // eslint-disable-line no-magic-numbers
+  PORT: process.env.PORT || 3000, // eslint-disable-line no-magic-numbers
   LOG_LEVEL: process.env.LOG_LEVEL || 'info',
   TOPIC: process.env.TOPIC || 'tc-x-events',
   KAFKA_OPTIONS: {
-    connectionString: process.env.KAFKA_HOST || 'localhost:9092',
+    connectionString: process.env.KAFKA_URL || 'localhost:9092',
     ssl: {
       cert: process.env.KAFKA_CLIENT_CERT || fs.readFileSync('./kafka_client.cer'), // eslint-disable-line no-sync
       key: process.env.KAFKA_CLIENT_CERT_KEY || fs.readFileSync('./kafka_client.key') // eslint-disable-line no-sync
     }
   },
-  MONGODB_URL: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/topcoderx'
+  DYNAMODB: {
+    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID || '',
+    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || '',
+    AWS_REGION: process.env.AWS_REGION || '',
+    IS_LOCAL: process.env.IS_LOCAL || 'false'
+  }
 };
