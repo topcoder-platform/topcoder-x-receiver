@@ -18,7 +18,7 @@ const IssueClosedEvent = {
     issue: issueSchema.required(),
     repository: repositorySchema.required(),
     assignee: Joi.object().keys({
-      id: Joi.number().allow(null)
+      id: Joi.alternatives().try(Joi.string(), Joi.number()).allow(null)
     }).required()
   })
 };

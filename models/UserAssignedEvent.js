@@ -19,7 +19,7 @@ UserAssignedEvent.schema = Joi.object().keys({
   issue: issueSchema.required(),
   repository: repositorySchema.required(),
   assignee: Joi.object().keys({
-    id: Joi.number().required()
+    id: Joi.alternatives().try(Joi.string(), Joi.number()).required()
   }).required()
 });
 

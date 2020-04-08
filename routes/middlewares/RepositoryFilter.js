@@ -22,6 +22,15 @@ module.exports = (provider) => async (req, res, next) => {
   } else if (provider === 'gitlab') {
     const repo = req.body.project || {};
     repoNames = [repo.homepage, repo.http_url, repo.url, repo.ssh_url, repo.web_url];
+  } else if (provider === 'azure') {
+    const projectId = req.body.resourceContainers.project.id;
+    const projects = await dbHelper.scan(Project, {
+      repoId: projectId,
+      archived: 'false'
+    });
+    if (projects && projects.length > 0) {
+      return next();
+    }
   }
   const projects = await dbHelper.scan(Project, {
     archived: 'false'

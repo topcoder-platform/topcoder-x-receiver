@@ -36,6 +36,17 @@ module.exports = (provider) => async (req, res, next) => {
         isValid = true;
       }
     });
+  } else if (provider === 'azure') {
+    const projectId = req.body.resourceContainers.project.id;
+    const project = await dbHelper.scanOne(Project, {
+      repoId: projectId
+    });
+    const buff = Buffer.from(req.headers.authorization.split(' ')[1], 'base64'); // Ta-da
+    const authorization = buff.toString('utf-8');
+    const pwd = authorization.split(':')[1];
+    if (pwd === project.secretWebhookKey) {
+      isValid = true;
+    }
   } else {
     // unknown provider
     return next();

@@ -31,7 +31,7 @@ dynamoose.setDefaults({
 if (process.env.CREATE_DB) {
   dynamoose.setDefaults({
     create: true,
-    update: true,
+    update: true
   });
 }
 
