@@ -3,7 +3,7 @@
  */
 
 /**
- * This module contains the EventDetector for gitlab.
+ * This module contains the EventDetector for azure.
  *
  * @author TCSCODER
  * @version 1.0
@@ -17,8 +17,8 @@ const models = require('../models');
 const EventDetector = require('./EventDetector');
 
 /**
- * parse the issues from gitlab webhook
- * @param {object} data the gitlab webhook payload
+ * parse the issues from azure webhook
+ * @param {object} data the azure webhook payload
  * @returns {object} the parsed issue detail
  */
 const parseIssue = (data) => {
@@ -36,8 +36,8 @@ const parseIssue = (data) => {
 };
 
 /**
- * parse the project from gitlab webhook project  payload
- * @param {object} data the gitlab project payload
+ * parse the project from azure webhook project  payload
+ * @param {object} data the azure project payload
  * @returns {object} the parsed project detail
  */
 const parseProject = (data) => {
@@ -56,49 +56,30 @@ const parseProject = (data) => {
 };
 
 /**
- * parse the comments from gitlab webhook payload
- * @param {object} data the gitlab webhook payload
+ * parse the comments from azure webhook payload
+ * @param {object} data the azure webhook payload
  * @returns {object} the parsed comment detail
  */
 const parseComment = (data) => ({
-  issue: parseIssue(data, data.issue),
-  repository: parseProject(data.project),
+  issue: parseIssue(data),
+  repository: parseProject(data),
   comment: {
-    id: data.object_attributes.id,
-    body: data.object_attributes.note,
+    id: data.resource.revision.commentVersionRef.commentId,
+    body: data.resource.revision.fields['System.History'],
     user: {
-      id: data.object_attributes.author_id
+      id: data.resource.revisedBy.id
     }
   }
 });
 
 /**
- * parse the issue event from gitlab webhook payload
- * @param {object} data the gitlab webhook payload
+ * parse the issue event from azure webhook payload
+ * @param {object} data the azure webhook payload
  * @returns {object} the parsed issue event detail
  */
 const parseIssueEventData = (data) => ({
   issue: parseIssue(data),
   repository: parseProject(data)
-});
-
-/**
- * parse the pull request from gitlab webhook payload
- * @param {object} data the gitlab webhook payload
- * @returns {object} the parsed pull request detail
- */
-const parsePullRequest = (data) => ({
-  number: data.object_attributes.iid,
-  id: data.object_attributes.id,
-  merged: data.object_attributes.state === 'merged',
-  body: data.object_attributes.description,
-  title: data.object_attributes.title,
-  user: {
-    id: data.object_attributes.author_id
-  },
-  assignees: data.object_attributes.assignee_id ? [{
-    id: data.object_attributes.assignee_id
-  }] : []
 });
 
 // definition of issue created event
@@ -114,15 +95,29 @@ const IssueCreatedEvent = {
 const IssueUpdatedEvent = {
   event: models.IssueUpdatedEvent,
   schema: Joi.object().keys({
-    object_kind: Joi.string().valid('issue').required(),
-    object_attributes: Joi.object().keys({
-      state: Joi.string().valid('opened').required(),
-      action: Joi.string().valid('update').required()
-    }).required(),
-    changes: Joi.object().keys({
-      assignees: Joi.any().forbidden()
-    }),
-    project: Joi.object().required()
+    eventType: Joi.string().valid('workitem.updated').required(),
+    resource: Joi.object().keys({
+      fields: Joi.object().keys({
+        'System.Title': Joi.object().keys({
+          newValue: Joi.string().required()
+        }).required()
+      }).required()
+    }).required()
+  }),
+  parse: parseIssueEventData
+};
+
+const IssueDescriptionUpdatedEvent = {
+  event: models.IssueUpdatedEvent,
+  schema: Joi.object().keys({
+    eventType: Joi.string().valid('workitem.updated').required(),
+    resource: Joi.object().keys({
+      fields: Joi.object().keys({
+        'System.Description': Joi.object().keys({
+          newValue: Joi.string().required()
+        }).required()
+      }).required()
+    }).required()
   }),
   parse: parseIssueEventData
 };
@@ -154,11 +149,13 @@ const IssueClosedEvent = {
 const CommentCreatedEvent = {
   event: models.CommentCreatedEvent,
   schema: Joi.object().keys({
-    object_kind: Joi.string().valid('note').required(),
-    project: Joi.object().required(),
-    object_attributes: Joi.object().keys({
-      note: Joi.string().required(),
-      noteable_type: Joi.string().valid('Issue').required()
+    eventType: Joi.string().valid('workitem.updated').required(),
+    resource: Joi.object().keys({
+      fields: Joi.object().keys({
+        'System.History': Joi.object().keys({
+          newValue: Joi.string().required()
+        }).required()
+      }).required()
     }).required()
   }),
   parse: parseComment
@@ -225,46 +222,13 @@ const LabelUpdatedEvent = {
   })
 };
 
-// definition of pull request created event
-const PullRequestCreatedEvent = {
-  event: models.PullRequestCreatedEvent,
-  schema: Joi.object().keys({
-    object_kind: Joi.string().valid('merge_request').required(),
-    object_attributes: Joi.object().keys({
-      action: Joi.string().valid('open').required()
-    }).required(),
-    project: Joi.object().required()
-  }),
-  parse: (data) => ({
-    pull_request: parsePullRequest(data),
-    repository: parseProject(data.project)
-  })
-};
-
-// definition of pull request closed event
-const PullRequestClosedEvent = {
-  event: models.PullRequestClosedEvent,
-  schema: Joi.object().keys({
-    object_kind: Joi.string().valid('merge_request').required(),
-    object_attributes: Joi.object().keys({
-      action: Joi.string().valid('close', 'merge').required()
-    }).required(),
-    project: Joi.object().required()
-  }),
-  parse: (data) => ({
-    pull_request: parsePullRequest(data),
-    repository: parseProject(data.project)
-  })
-};
-
 module.exports = new EventDetector('azure', [
   IssueCreatedEvent,
   LabelUpdatedEvent,
   UserUnassignedEvent,
   UserAssignedEvent,
   IssueUpdatedEvent,
+  IssueDescriptionUpdatedEvent,
   IssueClosedEvent,
-  CommentCreatedEvent,
-  PullRequestCreatedEvent,
-  PullRequestClosedEvent
+  CommentCreatedEvent
 ]);
