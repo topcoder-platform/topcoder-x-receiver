@@ -35,7 +35,8 @@ const schema = new Schema({
   rocketChatChannelName: {type: String, required: false},
   archived: {type: String, required: true},
   owner: {type: String, required: true},
-  secretWebhookKey: {type: String, required: true}
+  secretWebhookKey: {type: String, required: true},
+  createCopilotPayments: {type: String, required: false}
 });
 
 module.exports = schema;
