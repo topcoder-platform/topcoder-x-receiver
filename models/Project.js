@@ -36,7 +36,8 @@ const schema = new Schema({
   archived: {type: String, required: true},
   owner: {type: String, required: true},
   secretWebhookKey: {type: String, required: true},
-  createCopilotPayments: {type: String, required: false}
+  createCopilotPayments: {type: String, required: false},
+  isConnect: {type: Boolean, required: false, default: true}
 });
 
 module.exports = schema;
