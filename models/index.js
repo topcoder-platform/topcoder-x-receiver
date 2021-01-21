@@ -28,6 +28,13 @@ dynamoose.setDefaults({
   update: false
 });
 
+if (process.env.CREATE_DB) {
+  dynamoose.setDefaults({
+    create: true,
+    update: true
+  });
+}
+
 const IssueCreatedEvent = require('./IssueCreatedEvent');
 const IssueUpdatedEvent = require('./IssueUpdatedEvent');
 const IssueClosedEvent = require('./IssueClosedEvent');

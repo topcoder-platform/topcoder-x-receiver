@@ -17,7 +17,7 @@
  */
 async function scan(model, scanParams) {
   return await new Promise((resolve, reject) => {
-    model.scan(scanParams).exec((err, result) => {
+    model.scan(scanParams).consistent().all().exec((err, result) => {
       if (err) {
         reject(err);
       }
@@ -34,7 +34,7 @@ async function scan(model, scanParams) {
  */
 async function scanOne(model, scanParams) {
   return await new Promise((resolve, reject) => {
-    model.scan(scanParams).exec((err, result) => {
+    model.scan(scanParams).consistent().all().exec((err, result) => {
       if (err) {
         reject(err);
       }
