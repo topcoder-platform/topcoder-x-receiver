@@ -13,15 +13,30 @@
 const config = require('config');
 const dynamoose = require('dynamoose');
 
-dynamoose.AWS.config.update({
+
+const awsConfigs = config.DYNAMODB.IS_LOCAL_DB ? {
   accessKeyId: config.DYNAMODB.AWS_ACCESS_KEY_ID,
   secretAccessKey: config.DYNAMODB.AWS_SECRET_ACCESS_KEY,
   region: config.DYNAMODB.AWS_REGION
-});
+} : {
+  region: config.DYNAMODB.AWS_REGION
+};
 
-if (config.DYNAMODB.IS_LOCAL === 'true') {
-  dynamoose.local();
+dynamoose.AWS.config.update(awsConfigs);
+
+if (config.DYNAMODB.IS_LOCAL_DB) {
+  dynamoose.local(config.DYNAMODB.DYNAMODB_URL);
 }
+
+// dynamoose.AWS.config.update({
+//   // accessKeyId: config.DYNAMODB.AWS_ACCESS_KEY_ID,
+//   // secretAccessKey: config.DYNAMODB.AWS_SECRET_ACCESS_KEY,
+//   region: config.DYNAMODB.AWS_REGION
+// });
+
+// if (config.DYNAMODB.IS_LOCAL === 'true') {
+//   dynamoose.local();
+// }
 
 dynamoose.setDefaults({
   create: false,
