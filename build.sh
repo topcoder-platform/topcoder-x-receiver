@@ -28,7 +28,6 @@ KAFKA_CLIENT_CERT_KEY=$(eval "echo \$${ENV}_KAFKA_CLIENT_CERT_KEY")
 KAFKA_URL=$(eval "echo \$${ENV}_KAFKA_URL")
 ZOO_KEEPER=$(eval "echo \$${ENV}_ZOO_KEEPER")
 TOPIC=$(eval "echo \$${ENV}_TOPIC")
-MONGODB_URI=$(eval "echo \$${ENV}_MONGODB_URI")
 
 LOG_LEVEL=$(eval "echo \$${ENV}_LOG_LEVEL")
 NODE_ENV=$(eval "echo \$${ENV}_NODE_ENV")

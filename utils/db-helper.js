@@ -26,25 +26,6 @@ async function scan(model, scanParams) {
   });
 }
 
-/**
- * Get single data by scan parameters
- * @param {Object} model The dynamoose model to scan
- * @param {Object} scanParams The scan parameters object
- * @returns {Promise<void>}
- */
-async function scanOne(model, scanParams) {
-  return await new Promise((resolve, reject) => {
-    model.scan(scanParams).consistent().all().exec((err, result) => {
-      if (err) {
-        reject(err);
-      }
-
-      return resolve(result[0]);
-    });
-  });
-}
-
 module.exports = {
-  scan,
-  scanOne
+  scan
 };
