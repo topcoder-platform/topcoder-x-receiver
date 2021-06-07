@@ -21,13 +21,7 @@ const schema = new Schema({
   title: {type: String, required: true},
   tcDirectId: {
     type: Number,
-    required: true,
-    index: {
-      global: true,
-      rangeKey: 'id',
-      project: true,
-      name: 'TcDirectIdIndex'
-    }
+    required: true
   },
   repoUrl: {type: String, required: true},
   repoId: {type: String, required: false},
