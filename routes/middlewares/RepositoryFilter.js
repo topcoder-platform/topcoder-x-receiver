@@ -26,7 +26,7 @@ module.exports = (provider) => async (req, res, next) => {
   const projects = await dbHelper.scan(Project, {
     archived: 'false'
   });
-  const found = _.some(projects, (project) => _.includes(repoNames, project.repoUrl));
+  const found = _.some(projects, (project) => _.intersection(repoNames, project.repoUrls).length > 0);
   if (found) {
     return next();
   }

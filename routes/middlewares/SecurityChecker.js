@@ -19,7 +19,7 @@ module.exports = (provider) => async (req, res, next) => {
   const params = req.body;
   if (provider === 'github') {
     const projectDetails = await dbHelper.scan(Project, {
-      repoUrl: params.repository.html_url
+      repoUrls: { contains: params.repository.html_url }
     });
     _.forEach(projectDetails, (projectDetail) => {
       const hash = crypto.createHmac('sha1', projectDetail.secretWebhookKey).update(req.rawBody).digest('hex');
@@ -29,7 +29,7 @@ module.exports = (provider) => async (req, res, next) => {
     });
   } else if (provider === 'gitlab') {
     const projectDetails = await dbHelper.scan(Project, {
-      repoUrl: params.project.web_url
+      repoUrls: { contains: params.project.web_url }
     });
     _.forEach(projectDetails, (projectDetail) => { // eslint-disable-line lodash/prefer-filter
       if (projectDetail.secretWebhookKey === req.header('X-Gitlab-Token')) {

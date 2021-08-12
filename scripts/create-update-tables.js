@@ -29,7 +29,7 @@
  */
 async function pingTable(model) {
   return new Promise((resolve, reject) => {
-    if (!(model.scan && typeof model.scan == 'function' && model.scan({}).exec)) {
+    if (!(model.scan && typeof model.scan === 'function' && model.scan({}).exec)) {
       return resolve();
     }
     model.scan({id: 0}).exec((err, result) => {
