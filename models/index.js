@@ -46,6 +46,7 @@ const PullRequestCreatedEvent = require('./PullRequestCreatedEvent');
 const PullRequestClosedEvent = require('./PullRequestClosedEvent');
 const LabelUpdatedEvent = require('./LabelUpdatedEvent');
 const Project = require('./Project');
+const Repository = require('./Repository');
 
 module.exports = {
   IssueCreatedEvent,
@@ -58,5 +59,6 @@ module.exports = {
   PullRequestClosedEvent,
   LabelUpdatedEvent,
   Project: dynamoose.model('Topcoder_X.Project', Project),
+  Repository: dynamoose.model('Topcoder_X.Repository', Repository),
   IssueClosedEvent
 };
