@@ -9,33 +9,31 @@
  */
 'use strict';
 const crypto = require('crypto');
-const _ = require('lodash');
 const logger = require('../../utils/logger');
 const Project = require('../../models').Project;
+const Repository = require('../../models').Repository;
 const dbHelper = require('../../utils/db-helper');
 
 module.exports = (provider) => async (req, res, next) => {
   let isValid = false;
   const params = req.body;
   if (provider === 'github') {
-    const projectDetails = await dbHelper.scan(Project, {
-      repoUrls: { contains: params.repository.html_url }
-    });
-    _.forEach(projectDetails, (projectDetail) => {
+    const repositories = await dbHelper.queryRepositories(Repository, params.repository.html_url);
+    for (const repository of repositories) {  // eslint-disable-line
+      const projectDetail = await dbHelper.queryOneProject(Project, repository.projectId);
       const hash = crypto.createHmac('sha1', projectDetail.secretWebhookKey).update(req.rawBody).digest('hex');
       if (`sha1=${hash}` === req.header('X-Hub-Signature')) {
         isValid = true;
       }
-    });
+    }
   } else if (provider === 'gitlab') {
-    const projectDetails = await dbHelper.scan(Project, {
-      repoUrls: { contains: params.project.web_url }
-    });
-    _.forEach(projectDetails, (projectDetail) => { // eslint-disable-line lodash/prefer-filter
+    const repositories = await dbHelper.queryRepositories(Repository, params.project.web_url);
+    for (const repository of repositories) {  // eslint-disable-line
+      const projectDetail = await dbHelper.queryOneProject(Project, repository.projectId);
       if (projectDetail.secretWebhookKey === req.header('X-Gitlab-Token')) {
         isValid = true;
       }
-    });
+    }
   } else {
     // unknown provider
     return next();

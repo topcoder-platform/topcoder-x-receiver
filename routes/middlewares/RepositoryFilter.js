@@ -8,10 +8,9 @@
  * @version 1.0
  */
 'use strict';
-const _ = require('lodash');
 
 const logger = require('../../utils/logger');
-const Project = require('../../models').Project;
+const Repository = require('../../models').Repository;
 const dbHelper = require('../../utils/db-helper');
 
 module.exports = (provider) => async (req, res, next) => {
@@ -23,12 +22,10 @@ module.exports = (provider) => async (req, res, next) => {
     const repo = req.body.project || {};
     repoNames = [repo.homepage, repo.http_url, repo.url, repo.ssh_url, repo.web_url];
   }
-  const projects = await dbHelper.scan(Project, {
-    archived: 'false'
-  });
-  const found = _.some(projects, (project) => _.intersection(repoNames, project.repoUrls).length > 0);
-  if (found) {
-    return next();
+  for (const repoName of repoNames) { //eslint-disable-line
+    if (await dbHelper.queryOneActiveRepository(Repository, repoName)) {
+      return next();
+    }
   }
 
   // ignore this repo
