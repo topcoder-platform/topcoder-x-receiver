@@ -26,6 +26,72 @@ async function scan(model, scanParams) {
   });
 }
 
+/**
+ * Query active repositories
+ * @param {Object} model the dynamoose model
+ * @param {String} url the repository url
+ * @returns {Promise<Object>}
+ */
+async function queryRepositories(model, url) {
+  return await new Promise((resolve, reject) => {
+    model.query({
+      url
+    })
+    .all()
+    .exec((err, result) => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve(result);
+    });
+  });
+}
+
+/**
+ * Query one active repository
+ * @param {Object} model the dynamoose model
+ * @param {String} url the repository url
+ * @returns {Promise<Object>}
+ */
+async function queryOneActiveRepository(model, url) {
+  return await new Promise((resolve, reject) => {
+    model.queryOne({
+      url,
+      archived: 'false'
+    })
+    .all()
+    .exec((err, result) => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve(result);
+    });
+  });
+}
+
+/**
+ * Query one project
+ * @param {Object} model the dynamoose model
+ * @param {String} projectId the project id
+ * @returns {Promise<Object>}
+ */
+async function queryOneProject(model, projectId) {
+  return await new Promise((resolve, reject) => {
+    model.queryOne('id')
+      .eq(projectId)
+      .all()
+      .exec((err, result) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(result);
+      });
+  });
+}
+
 module.exports = {
-  scan
+  scan,
+  queryRepositories,
+  queryOneActiveRepository,
+  queryOneProject
 };

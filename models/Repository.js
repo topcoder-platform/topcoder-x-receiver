@@ -18,18 +18,28 @@ const schema = new Schema({
     hashKey: true,
     required: true
   },
-  title: {type: String, required: true},
-  tcDirectId: {
-    type: Number,
-    required: true
+  projectId: {
+    type: String,
+    required: true,
+    index: {
+      global: true,
+      project: true,
+      name: 'ProjectIdIndex'
+    }
   },
-  rocketChatWebhook: {type: String, required: false},
-  rocketChatChannelName: {type: String, required: false},
+  url: {
+    type: String,
+    required: true,
+    index: {
+      global: true,
+      project: true,
+      rangKey: 'archived',
+      name: 'URLIndex'
+    }
+  },
   archived: {type: String, required: true},
-  owner: {type: String, required: true},
-  secretWebhookKey: {type: String, required: true},
-  createCopilotPayments: {type: String, required: false},
-  isConnect: {type: Boolean, required: false, default: true}
+  repoId: {type: String, required: false},
+  registeredWebhookId: {type: String, required: false}
 });
 
 module.exports = schema;
