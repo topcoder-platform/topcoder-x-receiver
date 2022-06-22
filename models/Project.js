@@ -23,6 +23,11 @@ const schema = new Schema({
     type: Number,
     required: true
   },
+  tags: {
+    type: String,
+    required: true,
+    default: ''
+  },
   rocketChatWebhook: {type: String, required: false},
   rocketChatChannelName: {type: String, required: false},
   archived: {type: String, required: true},
