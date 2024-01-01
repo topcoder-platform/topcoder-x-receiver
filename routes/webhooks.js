@@ -24,12 +24,12 @@ const router = express.Router();
 router.post('/github', SecurityChecker('github'), RepositoryFilter('github'), wrapper(async (req, res) => {
   const result = GithubEventDetector.detect(req.body);
   if (!result) {
-    logger.info('unknown event detected');
-    logger.debug(req.body);
+    logger.info('Unknown Github event detected');
+    logger.info(JSON.stringify(req.body));
   } else {
     await kafka.send(JSON.stringify(result));
-    logger.info(`successfully add event: ${result.event} to kafka queue`);
-    logger.debug(`kafka message: ${JSON.stringify(result)}`);
+    logger.info(`Successfully added Github event: ${result.event} to kafka queue`);
+    logger.info(`kafka message: ${JSON.stringify(result)}`);
   }
   res.json({success: true});
 }));
@@ -37,12 +37,12 @@ router.post('/github', SecurityChecker('github'), RepositoryFilter('github'), wr
 router.post('/gitlab', SecurityChecker('gitlab'), RepositoryFilter('gitlab'), wrapper(async (req, res) => {
   const result = GitlabEventDetector.detect(req.body);
   if (!result) {
-    logger.info('unknown event detected');
-    logger.debug(req.body);
+    logger.info('Unknown Gitlab event detected');
+    logger.info(JSON.stringify(req.body));
   } else {
     await kafka.send(JSON.stringify(result));
-    logger.info(`successfully add event: ${result.event} to kafka queue`);
-    logger.debug(`kafka message: ${JSON.stringify(result)}`);
+    logger.info(`Successfully added Gitlab event: ${result.event} to kafka queue`);
+    logger.info(`kafka message: ${JSON.stringify(result)}`);
   }
   res.json({success: true});
 }));
