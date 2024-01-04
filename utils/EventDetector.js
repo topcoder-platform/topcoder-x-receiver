@@ -11,6 +11,7 @@
 
 const Joi = require('joi');
 const _ = require('lodash');
+const logger = require('../utils/logger');
 
 class EventDetector {
 
@@ -35,12 +36,14 @@ class EventDetector {
     _.forEach(this.events, (e) => {
       let result = Joi.validate(data, e.schema, {stripUnknown: true});
       if (result.error) {
+        logger.info(`Joi validate: ${JSON.stringify(result.error)}`);
         return;
       }
       const obj = e.parse(data);
       // validate
       result = Joi.attempt(obj, e.event.schema);
       if (result.error) {
+        logger.info(`Joi schema attempt error: ${JSON.stringify(result.error)}`);
         throw result.error;
       }
       // done
